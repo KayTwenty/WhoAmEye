@@ -8,11 +8,8 @@ WhoAmEye is a modern, customizable profile card and bio link platform for social
 - **Customizable Profile Cards**: Choose your theme, font, banner, and avatar.
 - **Unique Public URLs**: Share your card at `/u/[username]`.
 - **Gallery**: Upload and showcase images (Supabase Storage).
-- **Custom Links**: Add, edit, and reorder your favorite links.
+- **Custom Links**: Add, edit, and reorder your favourite links.
 - **Robust Auth**: Secure sign up, login, and password reset (Supabase Auth).
-- **Mobile-First Design**: Fully responsive and accessible.
-- **Neon Green/Black Branding**: Consistent, modern, and creative UI.
-- **SEO & Social Sharing**: Open Graph, Twitter Card, favicon, and manifest included.
 
 ---
 
