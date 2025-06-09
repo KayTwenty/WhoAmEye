@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabaseClient';
 
 export const runtime = 'edge';
 
-export async function GET(req: Request, context: { params: { username: string } }) {
+export async function GET(req: Request, context: { params: Record<string, string> }) {
   const username = context.params.username;
   // Fetch profile data from Supabase
   const { data: profile } = await supabase
