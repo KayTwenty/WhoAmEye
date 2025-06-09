@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabaseClient';
 import React from 'react';
 import GalleryModal from '@/components/GalleryModal';
+import { FaTwitter, FaInstagram, FaGithub, FaLinkedin, FaFacebook, FaYoutube, FaTiktok, FaTwitch } from 'react-icons/fa';
 
 export function generateMetadata() {
   return {
@@ -51,6 +52,20 @@ export default async function PublicProfileByUsername({ params }: { params: Prom
   // Strongly type links as { label: string; url: string }[]
   const links: { label: string; url: string }[] = Array.isArray(profile.links) ? profile.links : [];
 
+  // Social media platforms and icons
+  const socialPlatforms = [
+    { name: 'Twitter', key: 'twitter', icon: <FaTwitter className="text-blue-400" /> },
+    { name: 'Instagram', key: 'instagram', icon: <FaInstagram className="text-pink-500" /> },
+    { name: 'GitHub', key: 'github', icon: <FaGithub className="text-gray-800" /> },
+    { name: 'LinkedIn', key: 'linkedin', icon: <FaLinkedin className="text-blue-700" /> },
+    { name: 'Facebook', key: 'facebook', icon: <FaFacebook className="text-blue-600" /> },
+    { name: 'YouTube', key: 'youtube', icon: <FaYoutube className="text-red-500" /> },
+    { name: 'TikTok', key: 'tiktok', icon: <FaTiktok className="text-black" /> },
+    { name: 'Twitch', key: 'twitch', icon: <FaTwitch className="text-purple-600" /> },
+  ];
+  // Socials: expects profile.socials to be an object { twitter: url, instagram: url, ... }
+  const socials = typeof profile.socials === 'object' && profile.socials !== null ? profile.socials : {};
+
   return (
     <main className={`flex min-h-screen flex-col items-center justify-center bg-gradient-to-br ${selectedGradient.value} p-4 ${fontClass}`} style={{ minHeight: '100vh', paddingTop: '3rem' }}>
       <section className="relative w-full max-w-lg rounded-3xl bg-white/95 shadow-2xl p-8 flex flex-col items-center border border-gray-100">
@@ -96,10 +111,60 @@ export default async function PublicProfileByUsername({ params }: { params: Prom
             ))}
           </div>
         </div>
+        {/* Social Media Section */}
+        {Object.keys(socials).length > 0 && (
+          <div className="w-full mb-4">
+            <label className="text-xs text-gray-500 mb-1 block">Social Media</label>
+            <div className="flex flex-wrap gap-2">
+              {socialPlatforms.map(platform =>
+                socials[platform.key] ? (
+                  <a
+                    key={platform.key}
+                    href={socials[platform.key]}
+                    className="flex items-center gap-2 px-3 py-2 rounded bg-black/90 hover:bg-black text-neon-green font-semibold text-xs transition border border-neon-green shadow-md hover:scale-105 focus:ring-2 focus:ring-neon-green outline-none"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="w-5 h-5 flex items-center justify-center">{platform.icon}</span>
+                    <span className="truncate max-w-[100px]">{platform.name}</span>
+                  </a>
+                ) : null
+              )}
+            </div>
+          </div>
+        )}
         {/* Gallery Section */}
         <GalleryModal gallery={profile.gallery || []} />
         <span className="text-xs text-gray-400 mt-3">WhoAmEye – powered by you</span>
       </section>
+      {/* Made with WhoAmEye Badge (outside card, centered below, with eye logo) */}
+      <div className="flex justify-center w-full mt-4">
+        <a
+          href="/"
+          className="flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-black via-gray-900 to-black border-2 border-neon-green text-neon-green font-bold text-xs shadow-xl hover:scale-105 hover:brightness-125 transition-all backdrop-blur-md"
+          style={{ textDecoration: 'none', minWidth: '0', maxWidth: '100%' }}
+          title="Made with WhoAmEye"
+        >
+          <span className="inline-block align-middle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 40 40"
+              width="28"
+              height="28"
+              className="mr-2 drop-shadow-xl"
+              aria-hidden="true"
+            >
+              <ellipse cx="20" cy="20" rx="16" ry="10" fill="#fff" fillOpacity="0.10" stroke="#22c55e" strokeWidth="2.5" />
+              <ellipse cx="20" cy="20" rx="13" ry="8" fill="#a3e635" fillOpacity="0.18" />
+              <circle cx="20" cy="20" r="6.5" fill="#22c55e" />
+              <circle cx="22.5" cy="18.5" r="2.2" fill="#fff" fillOpacity="0.9" />
+            </svg>
+          </span>
+          <span className="font-extrabold tracking-tight whitespace-nowrap">WhoAmEye</span>
+          <span className="hidden sm:inline-block font-normal text-xs text-neon-green/80 px-1">·</span>
+          <span className="hidden sm:inline-block font-semibold text-xs text-neon-green/90">Create yours now!</span>
+        </a>
+      </div>
     </main>
   );
 }

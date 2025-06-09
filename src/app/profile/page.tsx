@@ -8,6 +8,7 @@ import type { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
 import Navbar from "@/components/Navbar";
+import { FaTwitter, FaInstagram, FaGithub, FaLinkedin, FaFacebook, FaYoutube, FaTiktok, FaTwitch } from 'react-icons/fa';
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -37,6 +38,7 @@ export default function ProfilePage() {
     bannerImage: string;
     links: { label: string; url: string; icon: string }[];
     gallery: string[];
+    socials?: { [key: string]: string };
   }>({
     username: "",
     displayName: "",
@@ -49,7 +51,17 @@ export default function ProfilePage() {
     links: [
       { label: "My Portfolio", url: "", icon: "FaLink" }
     ],
-    gallery: []
+    gallery: [],
+    socials: {
+      twitter: '',
+      instagram: '',
+      github: '',
+      linkedin: '',
+      facebook: '',
+      youtube: '',
+      tiktok: '',
+      twitch: '',
+    }
   });
   const [editing, setEditing] = useState(true);
   const [usernameLocked, setUsernameLocked] = useState(false);
@@ -156,6 +168,16 @@ export default function ProfilePage() {
           bannerImage: data.banner_image || '',
           links: data.links || [],
           gallery: data.gallery || [],
+          socials: data.socials || {
+            twitter: '',
+            instagram: '',
+            github: '',
+            linkedin: '',
+            facebook: '',
+            youtube: '',
+            tiktok: '',
+            twitch: '',
+          },
         });
         setFont(data.font || fonts[0].class);
         setUsernameLocked(!!data.username); // lock if username is set in DB
@@ -195,6 +217,18 @@ export default function ProfilePage() {
     setProfile(prev => ({ ...prev, gallery: prev.gallery.filter((_, i) => i !== idx) }));
   }
 
+  // Social media platforms and icons
+  const socialPlatforms = [
+    { name: 'Twitter', key: 'twitter', icon: <FaTwitter className="text-blue-400" /> },
+    { name: 'Instagram', key: 'instagram', icon: <FaInstagram className="text-pink-500" /> },
+    { name: 'GitHub', key: 'github', icon: <FaGithub className="text-gray-800" /> },
+    { name: 'LinkedIn', key: 'linkedin', icon: <FaLinkedin className="text-blue-700" /> },
+    { name: 'Facebook', key: 'facebook', icon: <FaFacebook className="text-blue-600" /> },
+    { name: 'YouTube', key: 'youtube', icon: <FaYoutube className="text-red-500" /> },
+    { name: 'TikTok', key: 'tiktok', icon: <FaTiktok className="text-black" /> },
+    { name: 'Twitch', key: 'twitch', icon: <FaTwitch className="text-purple-600" /> },
+  ];
+
   // Save profile to Supabase
   async function saveProfile() {
     if (!user) return;
@@ -211,6 +245,7 @@ export default function ProfilePage() {
       links: profile.links,
       font: font,
       gallery: profile.gallery,
+      socials: profile.socials, // <-- save socials
       updated_at: new Date().toISOString(),
     };
     // Username validation
@@ -508,6 +543,28 @@ export default function ProfilePage() {
                   </div>
                 </div>
               )}
+              {/* Social Media Section */}
+              <div className="w-full mb-4">
+                <label className="text-xs text-gray-500 mb-1 block">Social Media</label>
+                <div className="flex flex-col gap-2">
+                  {socialPlatforms.map(platform => (
+                    <div key={platform.key} className="flex items-center gap-2 mb-1">
+                      <span className="w-6 h-6 flex items-center justify-center">{platform.icon}</span>
+                      <input
+                        type="text"
+                        value={profile.socials?.[platform.key] || ''}
+                        onChange={e => setProfile(prev => ({
+                          ...prev,
+                          socials: { ...prev.socials, [platform.key]: e.target.value }
+                        }))}
+                        className="flex-1 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
+                        placeholder={`Your ${platform.name} URL`}
+                        maxLength={64}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
               {/* Edit/Save Button */}
               <button
                 onClick={editing ? saveProfile : () => setEditing(true)}
