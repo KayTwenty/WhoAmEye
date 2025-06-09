@@ -55,18 +55,11 @@ export default function ProfilePage() {
   const [usernameLocked, setUsernameLocked] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  // Font style options (expanded)
+  // Font style options
   const fonts = [
     { name: "Sans", class: "font-sans" },
     { name: "Serif", class: "font-serif" },
     { name: "Mono", class: "font-mono" },
-    { name: "Geist Sans", class: "geist-sans" },
-    { name: "Geist Mono", class: "geist-mono" },
-    { name: "Comic Sans", class: "font-comic-sans" },
-    { name: "Cursive", class: "font-cursive" },
-    { name: "Inter", class: "font-inter" },
-    { name: "Roboto", class: "font-roboto" },
-    { name: "Lobster", class: "font-lobster" },
   ];
 
   // More color themes

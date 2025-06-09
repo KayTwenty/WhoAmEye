@@ -33,6 +33,12 @@ export default async function PublicProfileByUsername({ params }: { params: Prom
     { name: 'Green/Teal/Blue', value: 'from-green-700 via-teal-600 to-blue-700', banner: 'from-green-300 via-teal-400 to-blue-400' },
     { name: 'Orange/Red/Yellow', value: 'from-yellow-500 via-orange-500 to-red-500', banner: 'from-yellow-200 via-orange-300 to-red-300' },
     { name: 'Gray/Slate', value: 'from-gray-800 via-slate-700 to-gray-900', banner: 'from-gray-400 via-slate-400 to-gray-500' },
+    { name: "Pink/Red", value: "from-pink-500 via-red-500 to-yellow-500", banner: "from-pink-200 via-red-200 to-yellow-200" },
+    { name: "Aqua/Blue", value: "from-cyan-400 via-blue-500 to-indigo-500", banner: "from-cyan-200 via-blue-200 to-indigo-200" },
+    { name: "Lime/Green", value: "from-lime-400 via-green-500 to-emerald-500", banner: "from-lime-200 via-green-200 to-emerald-200" },
+    { name: "Indigo/Violet", value: "from-indigo-500 via-violet-500 to-fuchsia-500", banner: "from-indigo-200 via-violet-200 to-fuchsia-200" },
+    { name: "Gold", value: "from-yellow-400 via-yellow-600 to-yellow-800", banner: "from-yellow-200 via-yellow-400 to-yellow-600" },
+    { name: "Black/White", value: "from-black via-gray-700 to-white", banner: "from-gray-200 via-gray-400 to-white" },
   ];
   const fonts = [
     { name: 'Sans', class: 'font-sans' },
