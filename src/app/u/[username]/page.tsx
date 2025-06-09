@@ -2,11 +2,42 @@ import { supabase } from '@/lib/supabaseClient';
 import React from 'react';
 import GalleryModal from '@/components/GalleryModal';
 import { FaTwitter, FaInstagram, FaGithub, FaLinkedin, FaFacebook, FaYoutube, FaTiktok, FaTwitch } from 'react-icons/fa';
+import { headers } from 'next/headers';
+import Link from 'next/link';
 
-export function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }) {
+  // Get the username from params
+  const { username } = await params;
+  // Await headers for correct usage
+  const hdrs = await headers();
+  const host = hdrs.get('x-forwarded-host') || hdrs.get('host') || '';
+  const protocol = host.startsWith('localhost') ? 'http' : 'https';
+  const baseUrl = `${protocol}://${host}`;
+  const ogImageUrl = `${baseUrl}/u/${encodeURIComponent(username)}/opengraph-image`;
+
   return {
-    title: 'WhoAmEye',
-    description: 'A modern, customizable bio card.'
+    title: `@${username} | WhoAmEye`,
+    description: 'A modern, customizable bio card.',
+    openGraph: {
+      title: `@${username} | WhoAmEye`,
+      description: 'A modern, customizable bio card.',
+      url: `${baseUrl}/u/${encodeURIComponent(username)}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `@${username} on WhoAmEye`,
+        },
+      ],
+      type: 'profile',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `@${username} | WhoAmEye`,
+      description: 'A modern, customizable bio card.',
+      images: [ogImageUrl],
+    },
   };
 }
 
@@ -139,9 +170,9 @@ export default async function PublicProfileByUsername({ params }: { params: Prom
       </section>
       {/* Made with WhoAmEye Badge (outside card, centered below, with eye logo) */}
       <div className="flex justify-center w-full mt-4">
-        <a
+        <Link
           href="/"
-          className="flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-black via-gray-900 to-black border-2 border-neon-green text-neon-green font-bold text-xs shadow-xl hover:scale-105 hover:brightness-125 transition-all backdrop-blur-md"
+          className="flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-white via-gray-200 to-white border-2 border-black text-black font-bold text-xs shadow-xl hover:scale-105 hover:bg-gray-100 hover:text-gray-900 transition-all backdrop-blur-md"
           style={{ textDecoration: 'none', minWidth: '0', maxWidth: '100%' }}
           title="Made with WhoAmEye"
         >
@@ -154,16 +185,16 @@ export default async function PublicProfileByUsername({ params }: { params: Prom
               className="mr-2 drop-shadow-xl"
               aria-hidden="true"
             >
-              <ellipse cx="20" cy="20" rx="16" ry="10" fill="#fff" fillOpacity="0.10" stroke="#22c55e" strokeWidth="2.5" />
-              <ellipse cx="20" cy="20" rx="13" ry="8" fill="#a3e635" fillOpacity="0.18" />
-              <circle cx="20" cy="20" r="6.5" fill="#22c55e" />
+              <ellipse cx="20" cy="20" rx="16" ry="10" fill="#fff" fillOpacity="0.10" stroke="#222" strokeWidth="2.5" />
+              <ellipse cx="20" cy="20" rx="13" ry="8" fill="#222" fillOpacity="0.10" />
+              <circle cx="20" cy="20" r="6.5" fill="#222" />
               <circle cx="22.5" cy="18.5" r="2.2" fill="#fff" fillOpacity="0.9" />
             </svg>
           </span>
           <span className="font-extrabold tracking-tight whitespace-nowrap">WhoAmEye</span>
-          <span className="hidden sm:inline-block font-normal text-xs text-neon-green/80 px-1">·</span>
-          <span className="hidden sm:inline-block font-semibold text-xs text-neon-green/90">Create yours now!</span>
-        </a>
+          <span className="hidden sm:inline-block font-normal text-xs text-gray-500 px-1">·</span>
+          <span className="hidden sm:inline-block font-semibold text-xs text-gray-700">Create yours now!</span>
+        </Link>
       </div>
     </main>
   );
