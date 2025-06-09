@@ -12,7 +12,6 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOpen, handleLogout }) => (
   <nav className="w-full flex items-center justify-between px-6 py-3 bg-gradient-to-r from-black via-gray-900 to-gray-800 border-b border-gray-900 shadow-lg fixed top-0 left-0 z-30 h-20">
     <div className="flex items-center gap-3">
-      {/* Logo with eye icon and brand name, more modern and spicy */}
       <span className="flex items-center font-extrabold text-2xl bg-gradient-to-r from-lime-400 via-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight drop-shadow-lg animate-gradient-x">
         <svg
           xmlns="http://www.w3.org/2000/svg"
