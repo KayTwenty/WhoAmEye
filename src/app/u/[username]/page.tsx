@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabaseClient';
 import React from 'react';
 import GalleryModal from '@/components/GalleryModal';
 
-export function generateMetadata({ params }: { params: { username: string } }) {
+export function generateMetadata() {
   return {
     title: 'WhoAmEye',
     description: 'A modern, customizable bio card.'
