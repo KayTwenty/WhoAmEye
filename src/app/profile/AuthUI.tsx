@@ -19,14 +19,13 @@ export default function AuthUI() {
     setLoading(true);
     setError('');
     setMessage('');
-    // Username logic removed
-    const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
+
+    const { error: signUpError } = await supabase.auth.signUp({ email, password });
     if (signUpError) {
       setError(signUpError.message);
       setLoading(false);
       return;
     }
-    // No username to save to profile here
     setMessage('Check your email for a confirmation link!');
     setLoading(false);
   }
@@ -50,21 +49,6 @@ export default function AuthUI() {
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) setError(error.message);
     else setMessage('Password reset email sent!');
-    setLoading(false);
-  }
-
-  // Magic link login
-  async function handleMagicLink(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setMessage('');
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    if (error) {
-      setError(error.message);
-    } else {
-      setMessage('Check your email for a magic login link!');
-    }
     setLoading(false);
   }
 

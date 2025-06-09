@@ -1,6 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
 import React from 'react';
-import type { Metadata } from 'next';
 import GalleryModal from '@/components/GalleryModal';
 
 export function generateMetadata({ params }: { params: { username: string } }) {
@@ -43,6 +42,9 @@ export default async function PublicProfileByUsername({ params }: { params: Prom
   const selectedGradient = gradients.find(g => g.name === profile.banner) || gradients[0];
   const fontClass = fonts.find(f => f.class === profile.font) ? profile.font : fonts[0].class;
 
+  // Strongly type links as { label: string; url: string }[]
+  const links: { label: string; url: string }[] = Array.isArray(profile.links) ? profile.links : [];
+
   return (
     <main className={`flex min-h-screen flex-col items-center justify-center bg-gradient-to-br ${selectedGradient.value} p-4 ${fontClass}`} style={{ minHeight: '100vh', paddingTop: '3rem' }}>
       <section className="relative w-full max-w-lg rounded-3xl bg-white/95 shadow-2xl p-8 flex flex-col items-center border border-gray-100">
@@ -74,7 +76,7 @@ export default async function PublicProfileByUsername({ params }: { params: Prom
         <div className="w-full mb-4">
           <label className="text-xs text-gray-500 mb-1 block">Custom Links</label>
           <div className="flex flex-col gap-2">
-            {profile.links && profile.links.filter((l: any) => l.label && l.url).map((link: any, i: number) => (
+            {links.filter((l) => l.label && l.url).map((link, i) => (
               <a
                 key={i}
                 href={link.url}

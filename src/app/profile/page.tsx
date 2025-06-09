@@ -6,7 +6,6 @@ const AuthUI = dynamic(() => import('./AuthUI'), { ssr: false });
 import { supabase } from '@/lib/supabaseClient';
 import type { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { FaUserCircle } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import Navbar from "@/components/Navbar";
 
@@ -147,7 +146,7 @@ export default function ProfilePage() {
   useEffect(() => {
     async function fetchProfile() {
       if (!user) return;
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
@@ -181,7 +180,7 @@ export default function ProfilePage() {
       for (const file of fileArr) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${user?.id}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-        const { data, error } = await supabase.storage.from('gallery').upload(fileName, file, { upsert: false });
+        const { error } = await supabase.storage.from('gallery').upload(fileName, file, { upsert: false });
         if (error) {
           toast.error('Failed to upload image.');
           continue;
