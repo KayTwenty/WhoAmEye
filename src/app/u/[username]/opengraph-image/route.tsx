@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabaseClient';
 
 export const runtime = 'edge';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GET(req: Request, context: any) {
   const username = context.params.username;
   // Fetch profile data from Supabase
