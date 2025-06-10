@@ -32,15 +32,33 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-br from-white via-gray-100 to-gray-300 text-black font-serif">
       <nav className="w-full flex items-center justify-between px-6 py-6 border-b border-gray-300 bg-white/90 backdrop-blur-md">
-        <span className="flex items-center font-extrabold text-2xl tracking-tight drop-shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="38" height="38" className="mr-2 drop-shadow-xl" aria-hidden="true">
-            <ellipse cx="20" cy="20" rx="16" ry="10" fill="#fff" fillOpacity="0.10" stroke="#222" strokeWidth="2.5" />
-            <ellipse cx="20" cy="20" rx="13" ry="8" fill="#222" fillOpacity="0.08" />
-            <circle cx="20" cy="20" r="6.5" fill="#222" />
-            <circle cx="22.5" cy="18.5" r="2.2" fill="#fff" fillOpacity="0.9" />
-          </svg>
-          WhoAmEye
-        </span>
+        <a href="/" className="flex items-center group focus:outline-none" tabIndex={0} aria-label="Go to homepage">
+          <span className="relative flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 40 40"
+              width="44"
+              height="44"
+              className="mr-2 drop-shadow-xl transition-transform group-hover:scale-110 group-hover:rotate-2"
+              aria-hidden="true"
+            >
+              <ellipse cx="20" cy="20" rx="16" ry="10" fill="#fff" fillOpacity="0.16" stroke="#111" strokeWidth="2.5" />
+              <ellipse cx="20" cy="20" rx="13" ry="8" fill="#222" fillOpacity="0.13" />
+              <ellipse cx="20" cy="20" rx="8.5" ry="6.5" fill="#fff" fillOpacity="0.13" />
+              <circle cx="20" cy="20" r="7.5" fill="#111" />
+              <ellipse cx="20" cy="23.5" rx="4.5" ry="1.2" fill="#fff" fillOpacity="0.10" />
+              <ellipse cx="20" cy="27" rx="5.5" ry="1.5" fill="#222" fillOpacity="0.13" />
+              <ellipse cx="20" cy="13" rx="3.5" ry="1.2" fill="#fff" fillOpacity="0.18" />
+              <circle cx="22.5" cy="18.5" r="2.5" fill="#fff" fillOpacity="0.97" />
+              <ellipse cx="17.5" cy="18.5" rx="1.1" ry="0.7" fill="#fff" fillOpacity="0.5" />
+            </svg>
+            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-1 bg-gradient-to-r from-black/60 via-gray-400/30 to-black/60 rounded-full blur-sm opacity-60" />
+          </span>
+          <span className="ml-1 font-extrabold tracking-tight text-2xl sm:text-2xl text-black whitespace-nowrap flex items-end">
+            WhoAmEye
+            <span className="text-[0.85em] align-super font-mono text-gray-500 ml-1 tracking-tight pb-0.5">.bio</span>
+          </span>
+        </a>
         <div className="flex items-center gap-3">
           <a
             href="https://github.com/KayTwenty/WhoAmEye"
