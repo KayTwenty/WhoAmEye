@@ -1,5 +1,6 @@
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
+import Link from "next/link";
 
 interface NavbarProps {
   displayName: string;
@@ -15,7 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
   return (
     <nav className="w-full flex items-center justify-between px-6 py-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 border-b border-gray-300 shadow-lg fixed top-0 left-0 z-30 h-20">
       <div className="flex items-center gap-3 select-none">
-        <a href="/" className="flex items-center group focus:outline-none" tabIndex={0} aria-label="Go to homepage">
+        <Link href="/" className="flex items-center group focus:outline-none" tabIndex={0} aria-label="Go to homepage">
           <span className="relative flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +42,7 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
             WhoAmEye
             <span className="text-[0.85em] align-super font-mono text-gray-500 ml-1 tracking-tight pb-0.5">.bio</span>
           </span>
-        </a>
+        </Link>
       </div>
       <div className="relative flex items-center gap-4">
         {shareUrl && (

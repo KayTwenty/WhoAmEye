@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-br from-white via-gray-100 to-gray-300 text-black font-serif">
       <nav className="w-full flex items-center justify-between px-6 py-6 border-b border-gray-300 bg-white/90 backdrop-blur-md">
-        <a href="/" className="flex items-center group focus:outline-none" tabIndex={0} aria-label="Go to homepage">
+        <Link href="/" className="flex items-center group focus:outline-none" tabIndex={0} aria-label="Go to homepage">
           <span className="relative flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +59,7 @@ export default function Home() {
             WhoAmEye
             <span className="text-[0.85em] align-super font-mono text-gray-500 ml-1 tracking-tight pb-0.5">.bio</span>
           </span>
-        </a>
+        </Link>
         <div className="flex items-center gap-3">
           <a
             href="https://github.com/KayTwenty/WhoAmEye"
