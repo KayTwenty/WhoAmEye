@@ -192,6 +192,7 @@ export default function ProfilePage() {
   }
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSocial, setActiveSocial] = useState<string | null>(null);
 
   // Load profile from Supabase on mount or user change
   useEffect(() => {
@@ -278,6 +279,7 @@ export default function ProfilePage() {
   // Save profile to Supabase
   async function saveProfile() {
     if (!user) return;
+    setActiveSocial(null); // Close any open social input
     const updates = {
       user_id: user.id,
       username: profile.username.toLowerCase(),
@@ -630,27 +632,61 @@ export default function ProfilePage() {
                   </div>
                 </div>
               )}
-              {/* Social Media Section */}
+              {/* Social Media Section - Redesigned */}
               <div className="w-full mb-4">
                 <label className="text-xs text-gray-500 mb-1 block">Social Media</label>
-                <div className="flex flex-col gap-2">
-                  {socialPlatforms.map(platform => (
-                    <div key={platform.key} className="flex items-center gap-2 mb-1">
-                      <span className="w-6 h-6 flex items-center justify-center">{platform.icon}</span>
-                      <input
-                        type="text"
-                        value={profile.socials?.[platform.key] || ''}
-                        onChange={e => setProfile(prev => ({
-                          ...prev,
-                          socials: { ...prev.socials, [platform.key]: e.target.value }
-                        }))}
-                        className="flex-1 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
-                        placeholder={`Your ${platform.name} URL`}
-                        maxLength={64}
-                      />
-                    </div>
-                  ))}
+                <div className="flex flex-row flex-wrap gap-2 mb-2">
+                  {socialPlatforms.map(platform => {
+                    const hasValue = !!profile.socials?.[platform.key];
+                    return (
+                      <button
+                        key={platform.key}
+                        type="button"
+                        className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 ${hasValue ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'} hover:bg-gray-100`}
+                        aria-label={platform.name}
+                        onClick={() => setActiveSocial(platform.key)}
+                      >
+                        {platform.icon}
+                        {hasValue && <span className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full border-2 border-white" />}
+                      </button>
+                    );
+                  })}
                 </div>
+                {activeSocial && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="w-6 h-6 flex items-center justify-center">{socialPlatforms.find(p => p.key === activeSocial)?.icon}</span>
+                    <input
+                      type="text"
+                      value={profile.socials?.[activeSocial] || ''}
+                      onChange={e => setProfile(prev => ({
+                        ...prev,
+                        socials: { ...prev.socials, [activeSocial]: e.target.value }
+                      }))}
+                      className="flex-1 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
+                      placeholder={`Your ${socialPlatforms.find(p => p.key === activeSocial)?.name} URL`}
+                      maxLength={64}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setProfile(prev => ({
+                        ...prev,
+                        socials: { ...prev.socials, [activeSocial]: '' }
+                      }))}
+                      className="text-xs px-2 py-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                      title="Remove"
+                    >
+                      ✕
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSocial(null)}
+                      className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      title="Done"
+                    >
+                      Done
+                    </button>
+                  </div>
+                )}
               </div>
               {/* Edit/Save Button */}
               <button
