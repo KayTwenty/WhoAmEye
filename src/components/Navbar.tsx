@@ -53,24 +53,24 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
             href={`/u/${displayName}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full text-left px-5 py-2 text-base text-gray-800 hover:bg-gray-100 font-semibold transition rounded-none border-b border-gray-100"
+            className="block w-full text-left px-5 py-2 text-base text-gray-900 hover:bg-gray-100 font-semibold transition rounded-none border-b border-gray-100 focus:bg-gray-200 focus:outline-none"
             role="menuitem"
           >
-            <span className="inline-block mr-2 align-middle">👁️</span> View Profile
+            View Profile
           </a>
           <a
             href="/profile"
-            className="block w-full text-left px-5 py-2 text-base text-gray-800 hover:bg-gray-100 font-semibold transition rounded-none border-b border-gray-100"
+            className="block w-full text-left px-5 py-2 text-base text-gray-900 hover:bg-gray-100 font-semibold transition rounded-none border-b border-gray-100 focus:bg-gray-200 focus:outline-none"
             role="menuitem"
           >
-            <span className="inline-block mr-2 align-middle">✏️</span> Edit Profile
+            Edit Profile
           </a>
           <button
             onClick={handleLogout}
-            className="w-full text-left px-5 py-2 text-base text-red-600 hover:bg-red-50 font-semibold transition rounded-b-2xl"
+            className="w-full text-left px-5 py-2 text-base text-red-600 hover:bg-red-50 font-semibold transition rounded-b-2xl focus:bg-red-100 focus:outline-none"
             role="menuitem"
           >
-            <span className="inline-block mr-2 align-middle">🚪</span> Log Out
+            Log Out
           </button>
         </div>
       )}
