@@ -364,7 +364,7 @@ export default function ProfilePage() {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-blue-500 via-fuchsia-500 to-pink-500 text-white font-semibold shadow hover:brightness-110 transition mb-2"
+                      className="px-3 py-1 text-xs rounded-full bg-black text-white font-semibold shadow hover:bg-gray-900 transition mb-2 border border-gray-700"
                     >
                       Upload Avatar
                     </button>
@@ -654,7 +654,7 @@ export default function ProfilePage() {
               {/* Edit/Save Button */}
               <button
                 onClick={editing ? saveProfile : () => setEditing(true)}
-                className="mt-2 px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 via-fuchsia-500 to-pink-500 text-white font-semibold shadow hover:brightness-110 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="mt-2 px-6 py-2 rounded-full bg-black text-white font-semibold shadow hover:bg-gray-900 transition focus:outline-none focus:ring-2 focus:ring-gray-700 border border-gray-700"
               >
                 {editing ? "Save" : "Edit Profile"}
               </button>
