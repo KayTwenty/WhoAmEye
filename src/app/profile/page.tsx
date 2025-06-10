@@ -240,6 +240,10 @@ export default function ProfilePage() {
     if (files) {
       const fileArr = Array.from(files).slice(0, 9 - profile.gallery.length); // max 9 images
       for (const file of fileArr) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+          toast.error('Image too large (max 5MB).');
+          continue;
+        }
         const fileExt = file.name.split('.').pop();
         const fileName = `${user?.id}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
         const { error } = await supabase.storage.from('gallery').upload(fileName, file, { upsert: false });
