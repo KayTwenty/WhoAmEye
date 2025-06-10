@@ -24,12 +24,12 @@ export const metadata: Metadata = {
     "public profile",
     "nextjs",
   ],
-  metadataBase: new URL("https://whoameye.com"),
+  metadataBase: new URL("https://whoameye.net"),
   openGraph: {
     title: "WhoAmEye – Modern Profile Cards & Bio Links",
     description:
       "Create a stunning, customizable profile card. Share your story, links, and gallery with the world. WhoAmEye lets you express yourself with modern design, creative freedom, and a unique public URL.",
-    url: "https://whoameye.com",
+    url: "https://whoameye.net",
     siteName: "WhoAmEye",
     images: [
       {
@@ -48,7 +48,6 @@ export const metadata: Metadata = {
     description:
       "Create a stunning, customizable profile card. Share your story, links, and gallery with the world. WhoAmEye lets you express yourself with modern design, creative freedom, and a unique public URL.",
     images: ["/og-image.png"],
-    creator: "@whoameyeapp",
   },
   icons: {
     icon: "/favicon.ico",
@@ -58,8 +57,8 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   generator: "Next.js",
   applicationName: "WhoAmEye",
-  authors: [{ name: "WhoAmEye Team", url: "https://whoameye.com" }],
-  creator: "WhoAmEye Team",
+  authors: [{ name: "KayTwenty", url: "https://whoameye.net" }],
+  creator: "KayTwenty",
   publisher: "WhoAmEye",
 };
 

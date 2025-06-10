@@ -45,7 +45,7 @@ export async function GET(req: Request, context: any) {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <span style={{ fontSize: 48, fontWeight: 800, color: '#111', lineHeight: 1 }}>{displayName}</span>
             <span style={{ fontSize: 28, color: '#444', marginTop: 8 }}>{tagline}</span>
-            <span style={{ fontSize: 22, color: '#888', marginTop: 16, fontFamily: 'monospace', letterSpacing: 1 }}>whoameye.bio</span>
+            <span style={{ fontSize: 22, color: '#888', marginTop: 16, fontFamily: 'monospace', letterSpacing: 1 }}>https://whoameye.net</span>
           </div>
         </div>
         <div style={{ position: 'absolute', bottom: 32, right: 48, fontSize: 24, color: '#222', opacity: 0.15, fontWeight: 900, letterSpacing: 2 }}>
