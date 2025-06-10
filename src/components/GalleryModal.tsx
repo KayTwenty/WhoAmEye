@@ -43,7 +43,6 @@ export default function GalleryModal({ gallery }: { gallery: string[] }) {
           </div>
         ))}
       </div>
-      <span className="text-xs text-gray-400 mt-3">WhoAmEye – powered by you</span>
     </div>
   );
 }
