@@ -41,7 +41,19 @@ export default function Home() {
           </svg>
           WhoAmEye
         </span>
-        <a href="/profile" className="px-6 py-2 rounded-full bg-black text-white font-bold shadow hover:scale-105 hover:shadow-xl transition-all duration-200 text-lg border border-gray-800">Sign In</a>
+        <div className="flex items-center gap-3">
+          <a
+            href="https://github.com/KayTwenty/WhoAmEye"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 rounded-full border border-gray-800 bg-white text-black font-bold shadow hover:bg-gray-100 hover:scale-105 transition-all duration-200 text-lg flex items-center gap-2"
+            aria-label="View on GitHub"
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.38-2.03 1.02-2.75-.1-.26-.44-1.3.1-2.7 0 0 .83-.27 2.75 1.02A9.36 9.36 0 0 1 12 6.84c.84.004 1.68.11 2.47.32 1.92-1.29 2.75-1.02 2.75-1.02.54 1.4.2 2.44.1 2.7.64.72 1.02 1.63 1.02 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg>
+            GitHub
+          </a>
+          <a href="/profile" className="px-6 py-2 rounded-full bg-black text-white font-bold shadow hover:scale-105 hover:shadow-xl transition-all duration-200 text-lg border border-gray-800">Sign In</a>
+        </div>
       </nav>
       <main className="flex-1 flex flex-col items-center justify-center text-center px-4">
         <h1 className="text-4xl sm:text-6xl font-extrabold mb-6 text-black drop-shadow-lg font-serif">Your Identity, Your Vibe.</h1>
