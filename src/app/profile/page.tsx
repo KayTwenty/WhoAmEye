@@ -10,6 +10,52 @@ import toast, { Toaster } from 'react-hot-toast';
 import Navbar from "@/components/Navbar";
 import { FaTwitter, FaInstagram, FaGithub, FaLinkedin, FaFacebook, FaYoutube, FaTiktok, FaTwitch } from 'react-icons/fa';
 
+// Tailwind color class to hex mapping for previewing gradients
+const tailwindToHex: { [key: string]: string } = {
+  'blue-400': '#60a5fa',
+  'fuchsia-500': '#a21caf',
+  'pink-400': '#f472b6',
+  'green-300': '#6ee7b7',
+  'teal-400': '#2dd4bf',
+  'yellow-200': '#fef9c3',
+  'orange-300': '#fdba74',
+  'red-300': '#fca5a5',
+  'gray-400': '#9ca3af',
+  'slate-400': '#94a3b8',
+  'pink-200': '#fbcfe8',
+  'red-200': '#fecaca',
+  'cyan-200': '#a5f3fc',
+  'blue-200': '#bfdbfe',
+  'indigo-200': '#c7d2fe',
+  'violet-200': '#ddd6fe',
+  'fuchsia-200': '#fae8ff',
+  'yellow-400': '#facc15',
+  'yellow-600': '#ca8a04',
+  'yellow-800': '#713f12',
+  'gray-200': '#e5e7eb',
+  'gray-700': '#374151',
+  'black': '#000000',
+  'white': '#ffffff',
+  'blue-900': '#1e3a8a',
+  'purple-900': '#581c87',
+  'pink-700': '#be185d',
+  'green-700': '#15803d',
+  'teal-600': '#0d9488',
+  'blue-700': '#1d4ed8',
+  'gray-800': '#1f2937',
+  'slate-700': '#334155',
+  'gray-900': '#111827',
+  'pink-500': '#ec4899',
+  'red-500': '#ef4444',
+  'yellow-500': '#eab308',
+  'cyan-400': '#22d3ee',
+  'blue-500': '#3b82f6',
+  'lime-400': '#a3e635',
+  'green-500': '#22c55e',
+  'emerald-500': '#10b981',
+  'violet-500': '#8b5cf6',
+};
+
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
@@ -513,33 +559,73 @@ export default function ProfilePage() {
                   />
                 </div>
               </div>
-              {/* Gradient Picker */}
+              {/* Gradient & Font Picker - Redesigned */}
               {editing && (
-                <div className="w-full flex flex-col items-center mb-4">
-                  <label className="text-xs text-gray-500 mb-1">Profile Color Theme</label>
-                  <div className="relative w-full max-w-xs mb-2">
-                    <select
-                      value={profile.banner}
-                      onChange={e => setProfile(prev => ({ ...prev, banner: e.target.value }))}
-                      className="w-full rounded-lg border p-2 focus:ring-2 focus:ring-blue-400 outline-none bg-white text-gray-800 shadow"
-                    >
+                <div className="w-full flex flex-col sm:flex-row gap-4 items-start mb-6 mt-2">
+                  {/* Color Theme */}
+                  <div className="flex-1 flex flex-col items-start">
+                    <label className="text-xs text-gray-500 mb-1 font-semibold">Profile Color Theme</label>
+                    <div className="flex flex-wrap gap-2">
                       {gradients.map((g) => (
-                        <option key={g.name} value={g.name}>{g.name}</option>
+                        <button
+                          key={g.name}
+                          type="button"
+                          className={`w-8 h-8 rounded-full border-2 ${profile.banner === g.name ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200'} focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center`}
+                          aria-label={g.name}
+                          onClick={() => setProfile(prev => ({ ...prev, banner: g.name }))}
+                          style={{ padding: 0, background: 'none' }}
+                        >
+                          <span
+                            className="block w-6 h-6 rounded-full"
+                            style={{
+                              background: (() => {
+                                // Extract color stops from Tailwind classes
+                                const stops = g.banner.split(' ')
+                                  .map(cls => {
+                                    // Remove from-, via-, to- and get the color name
+                                    const color = cls.replace('from-', '').replace('via-', '').replace('to-', '');
+                                    // If it's a Tailwind color, use the mapping, else fallback to the color string
+                                    if (tailwindToHex[color]) return tailwindToHex[color];
+                                    // Hardcoded fallback for lime-200 and slate-400/slate-700
+                                    if (color === 'lime-200') return '#d9f99d';
+                                    if (color === 'lime-400') return '#a3e635';
+                                    if (color === 'emerald-200') return '#a7f3d0';
+                                    if (color === 'emerald-500') return '#10b981';
+                                    if (color === 'slate-400') return '#94a3b8';
+                                    if (color === 'slate-700') return '#334155';
+                                    if (color === 'gray-400') return '#9ca3af';
+                                    if (color === 'gray-200') return '#e5e7eb';
+                                    if (color === 'gray-900') return '#111827';
+                                    if (color === 'gray-800') return '#1f2937';
+                                    if (color === 'gray-700') return '#374151';
+                                    if (color === 'gray-100') return '#f3f4f6';
+                                    if (color === 'gray-50') return '#f9fafb';
+                                    return color;
+                                  });
+                                return `linear-gradient(to right, ${stops.join(', ')})`;
+                              })()
+                            }}
+                          />
+                        </button>
                       ))}
-                    </select>
-                    <div className={`w-full h-3 rounded mt-2 bg-gradient-to-r ${gradients.find(g => g.name === profile.banner)?.banner || gradients[0].banner}`}></div>
+                    </div>
+                    <span className="text-xs text-black mt-1">{profile.banner}</span>
                   </div>
-                  <label className="text-xs text-gray-500 mb-1">Font Style</label>
-                  <div className="relative w-full max-w-xs">
-                    <select
-                      value={font}
-                      onChange={e => setFont(e.target.value)}
-                      className="w-full rounded-lg border p-2 focus:ring-2 focus:ring-blue-400 outline-none bg-white text-gray-800 shadow"
-                    >
+                  {/* Font Style */}
+                  <div className="flex-1 flex flex-col items-start">
+                    <label className="text-xs text-gray-500 mb-1 font-semibold">Font Style</label>
+                    <div className="flex gap-2">
                       {fonts.map((f) => (
-                        <option key={f.class} value={f.class}>{f.name}</option>
+                        <button
+                          key={f.class}
+                          type="button"
+                          className={`px-3 py-1 rounded-full border-2 ${font === f.class ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'} font-semibold text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-400`}
+                          onClick={() => setFont(f.class)}
+                        >
+                          {f.name}
+                        </button>
                       ))}
-                    </select>
+                    </div>
                   </div>
                 </div>
               )}
