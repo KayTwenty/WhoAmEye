@@ -18,8 +18,11 @@ export default function GalleryModal({ gallery }: { gallery: string[] }) {
           <img
             src={enlargedImg}
             alt="Enlarged gallery preview"
-            className="max-w-[90vw] max-h-[90vh] rounded-2xl shadow-2xl border-4 border-white"
+            className="max-w-[90vw] max-h-[90vh] rounded-2xl shadow-2xl border-4 border-white select-none pointer-events-auto"
             onClick={e => e.stopPropagation()}
+            draggable="false"
+            onContextMenu={e => e.preventDefault()}
+            style={{ userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none' }}
           />
           <button
             className="absolute top-6 right-8 text-white text-3xl font-bold bg-black/40 rounded-full px-3 py-1 hover:bg-black/70 transition"
