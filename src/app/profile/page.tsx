@@ -325,6 +325,7 @@ export default function ProfilePage() {
             menuOpen={menuOpen}
             setMenuOpen={setMenuOpen}
             handleLogout={handleLogout}
+            shareUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/u/${profile.displayName || user.id}`}
           />
           <main className={`flex min-h-screen flex-col items-center justify-center bg-gradient-to-br ${selectedGradient.value} p-4 ${font}`} style={{ minHeight: '100vh', paddingTop: '5.5rem' }}>
             <section className="relative w-full max-w-lg rounded-3xl bg-white/95 shadow-2xl p-8 flex flex-col items-center border border-gray-100">
@@ -658,39 +659,6 @@ export default function ProfilePage() {
               >
                 {editing ? "Save" : "Edit Profile"}
               </button>
-              {/* Shareable Profile Link */}
-              {user && (
-                <div className="flex flex-col items-center mt-4 w-full">
-                  <span className="text-xs text-gray-500 mb-1">Share your card:</span>
-                  <div className="flex items-center gap-2 w-full">
-                    <input
-                      type="text"
-                      readOnly
-                      value={`${typeof window !== 'undefined' ? window.location.origin : ''}/u/${profile.displayName || user.id}`}
-                      className="flex-1 text-xs border rounded p-2 bg-gray-50 text-gray-700 select-all"
-                      onFocus={e => e.target.select()}
-                    />
-                    <button
-                      type="button"
-                      className="px-3 py-1 rounded bg-blue-100 text-blue-700 text-xs font-semibold hover:bg-blue-200"
-                      onClick={() => {
-                        const url = `${window.location.origin}/u/${profile.displayName || user.id}`;
-                        navigator.clipboard.writeText(url);
-                      }}
-                    >
-                      Copy
-                    </button>
-                    <a
-                      href={`/u/${profile.displayName || user.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1 rounded bg-gray-100 text-gray-700 text-xs font-semibold hover:bg-gray-200"
-                    >
-                      View
-                    </a>
-                  </div>
-                </div>
-              )}
               {/* Customization note */}
               <span className="text-xs text-gray-400 mt-3">Your own platform bio card – make it yours!</span>
             </section>
