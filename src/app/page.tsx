@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
+// @ts-ignore
+import rawMarqueeFeatures from "@/data/marqueeFeatures.json";
+const marqueeFeatures: Array<{ icon: string; title: string; desc: string }> = Array.isArray(rawMarqueeFeatures) ? rawMarqueeFeatures : [];
 
 export default function Home() {
   const router = useRouter();
@@ -71,21 +74,26 @@ export default function Home() {
         <p className="max-w-2xl text-base xs:text-lg sm:text-2xl text-gray-700 mb-6 sm:mb-8 font-medium leading-relaxed">
           Create a stunning, customizable profile card that stands out. Share your story, links, and gallery with the world. <span className="text-black font-bold underline decoration-gray-400">WhoAmEye</span> lets you express yourself with modern design, creative freedom, and a unique public URL.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-8 sm:mb-12 items-center justify-center w-full">
-          <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xs shadow-xl border border-gray-300 flex flex-col items-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-200">
-            <span className="text-3xl mb-2">🎨</span>
-            <h2 className="font-bold text-lg sm:text-xl mb-1 text-black">Fully Customizable</h2>
-            <p className="text-gray-700 text-sm sm:text-base">Choose your theme, font, banner, and layout. Make your card truly yours.</p>
-          </div>
-          <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xs shadow-xl border border-gray-300 flex flex-col items-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-200">
-            <span className="text-3xl mb-2">🔗</span>
-            <h2 className="font-bold text-lg sm:text-xl mb-1 text-black">Share Everything</h2>
-            <p className="text-gray-700 text-sm sm:text-base">Add custom links, a bio, pronouns, and a gallery. All in one beautiful card.</p>
-          </div>
-          <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xs shadow-xl border border-gray-300 flex flex-col items-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-200">
-            <span className="text-3xl mb-2">🚀</span>
-            <h2 className="font-bold text-lg sm:text-xl mb-1 text-black">Instant & Secure</h2>
-            <p className="text-gray-700 text-sm sm:text-base">Sign up in seconds. Your data is safe, and your username is uniquely yours.</p>
+        {/* Marquee features row (animated, seamless, all unique features) */}
+        <div className="w-full overflow-x-hidden mt-4 mb-6">
+          <div className="relative w-full h-[220px]">
+            <div className="absolute top-0 left-0 flex animate-marquee-boxes gap-8 w-[300vw]">
+              {[...marqueeFeatures, ...marqueeFeatures].map((feature, i) => (
+                <div key={feature.title + i} className="bg-gradient-to-br from-white via-gray-50 to-gray-200 rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center justify-center min-w-[270px] max-w-[270px] h-[200px] px-6 py-6 mx-2 transition hover:shadow-2xl">
+                  <span className="text-4xl mb-2">{feature.icon}</span>
+                  <h2 className="font-bold text-lg sm:text-xl mb-1 text-black text-center">{feature.title}</h2>
+                  <p className="text-gray-700 text-sm sm:text-base text-center leading-relaxed break-words w-full">{feature.desc}</p>
+                </div>
+              ))}
+              {/* Repeat the same set for seamless infinite loop */}
+              {[...marqueeFeatures, ...marqueeFeatures].map((feature, i) => (
+                <div key={feature.title + '-repeat2-' + i} className="bg-gradient-to-br from-white via-gray-50 to-gray-200 rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center justify-center min-w-[270px] max-w-[270px] h-[200px] px-6 py-6 mx-2 transition hover:shadow-2xl">
+                  <span className="text-4xl mb-2">{feature.icon}</span>
+                  <h2 className="font-bold text-lg sm:text-xl mb-1 text-black text-center">{feature.title}</h2>
+                  <p className="text-gray-700 text-sm sm:text-base text-center leading-relaxed break-words w-full">{feature.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <a href="/profile" className="inline-block px-8 sm:px-10 py-3 sm:py-4 rounded-full bg-gradient-to-r from-black via-gray-800 to-black text-white font-extrabold text-xl sm:text-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 mt-2 border border-gray-800 w-full max-w-xs sm:max-w-md">Get Started Free</a>
@@ -104,6 +112,13 @@ export default function Home() {
         }
         .xs\\:text-4xl { font-size: 2.25rem; }
         .xs\\:text-lg { font-size: 1.125rem; }
+        @keyframes marquee-boxes {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee-boxes {
+          animation: marquee-boxes 48s linear infinite;
+        }
       `}</style>
     </div>
   );
