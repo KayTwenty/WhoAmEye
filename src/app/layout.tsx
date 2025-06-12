@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import NProgressLoader from "@/components/NProgressLoader";
-import Head from "next/head";
 
 export const metadata: Metadata = {
   title: {
