@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 export default function GalleryModal({ gallery }: { gallery: string[] }) {
+  // Always call hooks at the top level
   const [enlargedImg, setEnlargedImg] = useState<string | null>(null);
+  const [swipeX, setSwipeX] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const touchStart = useRef<number | null>(null);
 
+  // Early return after hooks
   if (!gallery || gallery.length === 0) return null;
 
   // Helper to get current index
   const currentIndex = enlargedImg ? gallery.findIndex(img => img === enlargedImg) : -1;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < gallery.length - 1;
-
-  // Smooth swipe support for both desktop and mobile
-  const [swipeX, setSwipeX] = useState(0);
-  const [isSwiping, setIsSwiping] = useState(false);
-  const touchStart = React.useRef<number | null>(null);
 
   function handlePointerDown(e: React.PointerEvent | React.TouchEvent) {
     setIsSwiping(true);
@@ -42,7 +42,7 @@ export default function GalleryModal({ gallery }: { gallery: string[] }) {
   }
 
   // Keyboard navigation
-  React.useEffect(() => {
+  useEffect(() => {
     if (!enlargedImg) return;
     function handleKey(e: KeyboardEvent) {
       if (e.key === 'ArrowLeft' && hasPrev) setEnlargedImg(gallery[currentIndex - 1]);

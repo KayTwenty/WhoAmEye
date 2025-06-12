@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(/* req: NextRequest */) {
   const supabase = createServerComponentClient({ cookies });
   const {
     data: { user },

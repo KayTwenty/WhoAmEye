@@ -4,9 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
-// @ts-ignore
-import rawMarqueeFeatures from "@/data/marqueeFeatures.json";
-const marqueeFeatures: Array<{ icon: string; title: string; desc: string }> = Array.isArray(rawMarqueeFeatures) ? rawMarqueeFeatures : [];
+import { marqueeFeatures } from "@/data/marqueeFeatures";
 
 export default function Home() {
   const router = useRouter();

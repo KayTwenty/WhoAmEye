@@ -14,7 +14,6 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOpen, handleLogout, shareUrl }) => {
   const [shareOpen, setShareOpen] = React.useState(false);
-  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
   // Delete profile function
   async function handleDeleteProfile() {
@@ -29,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
       } else {
         toast.error('Failed to delete profile.');
       }
-    } catch (e) {
+    } catch {
       toast.error('Error deleting profile.');
     }
   }
@@ -99,7 +98,7 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
                       readOnly
                       value={shareUrl}
                       className="flex-1 text-xs border rounded p-2 bg-gray-50 text-gray-700 select-all font-mono"
-                      onFocus={e => e.target.select()}
+                      onFocus={() => {}}
                     />
                     <button
                       type="button"
