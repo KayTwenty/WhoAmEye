@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
@@ -8,13 +8,10 @@ import { marqueeFeatures } from "@/data/marqueeFeatures";
 
 export default function Home() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
         router.replace("/profile");
-      } else {
-        setLoading(false);
       }
     });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -27,10 +24,7 @@ export default function Home() {
     };
   }, [router]);
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-gray-100 to-gray-300"><span className="text-black text-xl font-bold animate-pulse">Loading...</span></div>;
-  }
-
+  // Always render the landing page, don't block on loading
   return (
     <div className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-br from-white via-gray-100 to-gray-300 text-black font-serif">
       <nav className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-300 bg-white/90 backdrop-blur-md">
