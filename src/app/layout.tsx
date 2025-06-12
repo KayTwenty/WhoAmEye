@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import NProgressLoader from "@/components/NProgressLoader";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   title: {
@@ -54,7 +56,6 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/favicon.ico",
   },
-  manifest: "/site.webmanifest",
   generator: "Next.js",
   applicationName: "WhoAmEye",
   authors: [{ name: "KayTwenty", url: "https://whoameye.net" }],
@@ -73,16 +74,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="index, follow" />
-        <meta name="referrer" content="strict-origin-when-cross-origin" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="canonical" href="https://whoameye.net/" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "WhoAmEye",
+              url: "https://whoameye.net/",
+              description:
+                "Create a stunning, customizable profile card. Share your story, links, and gallery with the world. WhoAmEye lets you express yourself with modern design, creative freedom, and a unique public URL.",
+              publisher: {
+                "@type": "Organization",
+                name: "WhoAmEye",
+                url: "https://whoameye.net/",
+                logo: {
+                  "@type": "ImageObject",
+                  url: "https://whoameye.net/logo.svg",
+                },
+              },
+            }),
+          }}
+        />
       </head>
-      <body
-        className={`antialiased bg-black text-white`}
-      >
+      <body className={`antialiased bg-black text-white`}>
+        <NProgressLoader />
         {children}
       </body>
     </html>

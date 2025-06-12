@@ -36,23 +36,6 @@ WhoAmEye is a modern, customizable profile card and bio link platform for social
 
 ---
 
-## 🛠️ Project Structure
-- `src/app/` – Next.js app directory (landing, profile editor, public profiles)
-- `src/components/` – Navbar, GalleryModal, and shared UI
-- `src/lib/` – Supabase client and utilities
-- `public/` – Static assets (favicon, og-image, etc)
-
----
-
-## 🧑‍💻 Tech Stack
-- [Next.js](https://nextjs.org/) (App Router)
-- [Supabase](https://supabase.com/) (Auth, Database, Storage)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [React Hot Toast](https://react-hot-toast.com/)
-- [React Icons](https://react-icons.github.io/react-icons/)
-
----
-
 ## 🌐 Deployment
 Deploy on [Vercel](https://vercel.com/) or your preferred platform. See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying).
 

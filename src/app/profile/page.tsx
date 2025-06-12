@@ -194,10 +194,14 @@ export default function ProfilePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSocial, setActiveSocial] = useState<string | null>(null);
 
+  // Add a loading state for the profile
+  const [loading, setLoading] = useState(true);
+
   // Load profile from Supabase on mount or user change
   useEffect(() => {
     async function fetchProfile() {
       if (!user) return;
+      setLoading(true);
       const { data } = await supabase
         .from('profiles')
         .select('*')
@@ -229,8 +233,9 @@ export default function ProfilePage() {
         setFont(data.font || fonts[0].class);
         setUsernameLocked(!!data.username); // lock if username is set in DB
       }
+      setLoading(false);
     }
-    fetchProfile();
+    if (user) fetchProfile();
   }, [user]);
 
   // Gallery image upload (Supabase Storage)
@@ -333,376 +338,382 @@ export default function ProfilePage() {
             handleLogout={handleLogout}
             shareUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/u/${profile.displayName || user.id}`}
           />
-          <main className={`flex min-h-screen flex-col items-center justify-center bg-gradient-to-br ${selectedGradient.value} p-4 ${font}`} style={{ minHeight: '100vh', paddingTop: '5.5rem' }}>
-            <section className="relative w-full max-w-lg rounded-3xl bg-white/95 shadow-2xl p-8 flex flex-col items-center border border-gray-100">
-              {/* Banner */}
-              <div className={`w-full h-36 rounded-2xl mb-[-56px] shadow-lg relative flex items-center justify-center overflow-hidden`}>
-                {profile.bannerImage ? (
-                  <img src={profile.bannerImage} alt="Banner" className="absolute w-full h-full object-cover rounded-2xl" />
-                ) : (
-                  <div className={`w-full h-full bg-gradient-to-r ${selectedGradient.banner} rounded-2xl`} />
-                )}
-                {editing && (
-                  <button
-                    type="button"
-                    onClick={() => bannerInputRef.current?.click()}
-                    className="absolute right-2 top-2 px-2 py-1 text-xs rounded bg-white/80 text-gray-700 font-semibold shadow hover:bg-white"
-                  >
-                    Upload Banner
-                  </button>
-                )}
-                <input
-                  ref={bannerInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleBannerUpload}
-                  className="hidden"
-                />
-              </div>
-              {/* Avatar */}
-              <div className="relative z-10 -mt-20 mb-3 flex flex-col items-center">
-                {editing ? (
-                  <>
-                    <img
-                      src={profile.avatar}
-                      alt="Avatar Preview"
-                      className="w-36 h-36 rounded-full border-4 border-white shadow-xl object-cover bg-gray-100 mb-2"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="px-3 py-1 text-xs rounded-full bg-black text-white font-semibold shadow hover:bg-gray-900 transition mb-2 border border-gray-700"
-                    >
-                      Upload Avatar
-                    </button>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleAvatarUpload}
-                      className="hidden"
-                    />
-                  </>
-                ) : (
-                  <img
-                    src={profile.avatar}
-                    alt="Avatar"
-                    className="w-36 h-36 rounded-full border-4 border-white shadow-xl object-cover bg-gray-100"
-                  />
-                )}
-              </div>
-              {/* Display Name, Pronouns & Tagline */}
-              {editing ? (
-                <>
-                  {usernameLocked ? (
-                    <input
-                      type="text"
-                      name="username"
-                      value={profile.username}
-                      className="text-base font-mono text-blue-700 text-center w-full mb-1 border rounded p-2 bg-gray-100 cursor-not-allowed"
-                      disabled
-                      readOnly
-                    />
+          {loading ? (
+            <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-gray-800 via-slate-700 to-gray-900 p-4" style={{ minHeight: '100vh', paddingTop: '5.5rem' }}>
+              <section className="w-full max-w-lg rounded-3xl bg-white/90 shadow-2xl p-8 flex flex-col items-center border border-gray-100 animate-pulse relative min-h-[420px]" />
+            </main>
+          ) : (
+            <main className={`flex min-h-screen flex-col items-center justify-center bg-gradient-to-br ${selectedGradient.value} p-4 ${font}`} style={{ minHeight: '100vh', paddingTop: '5.5rem' }}>
+              <section className="relative w-full max-w-lg rounded-3xl bg-white/95 shadow-2xl p-8 flex flex-col items-center border border-gray-100">
+                {/* Banner */}
+                <div className={`w-full h-36 rounded-2xl mb-[-56px] shadow-lg relative flex items-center justify-center overflow-hidden`}>
+                  {profile.bannerImage ? (
+                    <img src={profile.bannerImage} alt="Banner" className="absolute w-full h-full object-cover rounded-2xl" />
                   ) : (
-                    <input
-                      type="text"
-                      name="username"
-                      value={profile.username}
-                      onChange={e => setProfile(prev => ({ ...prev, username: e.target.value }))}
-                      className={`text-base font-mono text-blue-700 text-center w-full mb-1 border rounded p-2 ${usernameLocked ? 'bg-gray-100 cursor-not-allowed' : ''} focus:ring-2 focus:ring-blue-400 outline-none`}
-                      placeholder="Username (unique, a-z, 0-9, _ only)"
-                      maxLength={20}
-                      pattern="^[a-zA-Z0-9_]{3,20}$"
-                      required
-                      disabled={usernameLocked}
-                      readOnly={usernameLocked}
-                    />
+                    <div className={`w-full h-full bg-gradient-to-r ${selectedGradient.banner} rounded-2xl`} />
                   )}
-                  <input
-                    type="text"
-                    name="displayName"
-                    value={profile.displayName}
-                    onChange={handleChange}
-                    className="text-3xl font-extrabold text-black text-center w-full mb-1 border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                    placeholder="Display Name"
-                    maxLength={32}
-                    autoFocus
-                  />
-                  <input
-                    type="text"
-                    name="pronouns"
-                    value={profile.pronouns}
-                    onChange={handleChange}
-                    className="text-sm text-gray-700 text-center w-full mb-1 border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                    placeholder="Pronouns (e.g. she/her, he/him, they/them)"
-                    maxLength={32}
-                  />
-                  <input
-                    type="text"
-                    name="tagline"
-                    value={profile.tagline}
-                    onChange={handleChange}
-                    className="text-base text-gray-700 mb-3 w-full border rounded p-2 focus:ring-2 focus:ring-pink-400 outline-none"
-                    placeholder="Tagline"
-                    maxLength={64}
-                  />
-                </>
-              ) : (
-                <>
-                  <h1 className="text-3xl font-extrabold text-black tracking-tight">{profile.displayName}</h1>
-                  {profile.pronouns && (
-                    <div className="text-xs text-gray-600 font-semibold mb-1">{profile.pronouns}</div>
-                  )}
-                  <p className="text-base text-gray-700 mb-3">{profile.tagline}</p>
-                </>
-              )}
-              {/* About/Bio */}
-              {editing ? (
-                <textarea
-                  name="bio"
-                  value={profile.bio}
-                  onChange={handleChange}
-                  className="text-center text-gray-800 mb-5 w-full border rounded p-2 focus:ring-2 focus:ring-fuchsia-400 outline-none"
-                  rows={4}
-                  placeholder="About/Bio"
-                  maxLength={300}
-                />
-              ) : (
-                <p className="text-center text-gray-800 mb-5 whitespace-pre-line">{profile.bio}</p>
-              )}
-              {/* Custom Links Section */}
-              <div className="w-full mb-4">
-                <label className="text-xs text-gray-500 mb-1 block">Custom Links</label>
-                {editing ? (
-                  <>
-                    {profile.links.map((link, i) => (
-                      <div key={i} className="flex gap-2 mb-2 items-center">
-                        <input
-                          type="text"
-                          value={link.label}
-                          onChange={e => handleLinkChange(i, 'label', e.target.value)}
-                          className="w-32 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
-                          placeholder="Label"
-                          maxLength={24}
-                        />
-                        <input
-                          type="text"
-                          value={link.url}
-                          onChange={e => handleLinkChange(i, 'url', e.target.value)}
-                          className="flex-1 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
-                          placeholder="https://example.com"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeLink(i)}
-                          className="text-xs px-2 py-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
-                          title="Remove"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))}
+                  {editing && (
                     <button
                       type="button"
-                      onClick={addLink}
-                      className="mt-1 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold hover:bg-blue-200"
+                      onClick={() => bannerInputRef.current?.click()}
+                      className="absolute right-2 top-2 px-2 py-1 text-xs rounded bg-white/80 text-gray-700 font-semibold shadow hover:bg-white"
                     >
-                      + Add Link
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex flex-col gap-2">
-                    {profile.links.filter(l => l.label && l.url).map((link, i) => (
-                      <a
-                        key={i}
-                        href={link.url}
-                        className="flex items-center gap-2 px-3 py-2 rounded bg-gray-100 hover:bg-blue-50 text-black font-semibold text-xs transition"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <span className="truncate">{link.label}</span>
-                        <span className="truncate text-gray-400">{link.url.replace(/^https?:\/\//, '')}</span>
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {/* Gallery Section */}
-              <div className="w-full mb-4">
-                <label className="text-xs text-gray-500 mb-1 block">Gallery (up to 9 images)</label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {profile.gallery && profile.gallery.map((img, i) => (
-                    <div key={i} className="relative group">
-                      <img src={img} alt={`Gallery ${i + 1}`} className="w-20 h-20 object-cover rounded-lg border shadow" />
-                      {editing && (
-                        <button
-                          type="button"
-                          onClick={() => removeGalleryImage(i)}
-                          className="absolute top-1 right-1 bg-white/80 text-red-600 rounded-full p-1 text-xs shadow group-hover:scale-110 transition"
-                          title="Remove"
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                  {editing && profile.gallery.length < 9 && (
-                    <button
-                      type="button"
-                      onClick={() => galleryInputRef.current?.click()}
-                      className="w-20 h-20 flex items-center justify-center border-2 border-dashed border-blue-300 rounded-lg text-blue-400 hover:bg-blue-50 text-3xl font-bold"
-                      title="Add Image"
-                    >
-                      +
+                      Upload Banner
                     </button>
                   )}
                   <input
-                    ref={galleryInputRef}
+                    ref={bannerInputRef}
                     type="file"
                     accept="image/*"
-                    multiple
-                    onChange={handleGalleryUpload}
+                    onChange={handleBannerUpload}
                     className="hidden"
                   />
                 </div>
-              </div>
-              {/* Gradient & Font Picker - Redesigned */}
-              {editing && (
-                <div className="w-full flex flex-col sm:flex-row gap-4 items-start mb-6 mt-2">
-                  {/* Color Theme */}
-                  <div className="flex-1 flex flex-col items-start">
-                    <label className="text-xs text-gray-500 mb-1 font-semibold">Profile Color Theme</label>
-                    <div className="flex flex-wrap gap-2">
-                      {gradients.map((g) => (
-                        <button
-                          key={g.name}
-                          type="button"
-                          className={`w-8 h-8 rounded-full border-2 ${profile.banner === g.name ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200'} focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center`}
-                          aria-label={g.name}
-                          onClick={() => setProfile(prev => ({ ...prev, banner: g.name }))}
-                          style={{ padding: 0, background: 'none' }}
-                        >
-                          <span
-                            className="block w-6 h-6 rounded-full"
-                            style={{
-                              background: (() => {
-                                // Extract color stops from Tailwind classes
-                                const stops = g.banner.split(' ')
-                                  .map(cls => {
-                                    // Remove from-, via-, to- and get the color name
-                                    const color = cls.replace('from-', '').replace('via-', '').replace('to-', '');
-                                    // If it's a Tailwind color, use the mapping, else fallback to the color string
-                                    if (tailwindToHex[color]) return tailwindToHex[color];
-                                    // Hardcoded fallback for lime-200 and slate-400/slate-700
-                                    if (color === 'lime-200') return '#d9f99d';
-                                    if (color === 'lime-400') return '#a3e635';
-                                    if (color === 'emerald-200') return '#a7f3d0';
-                                    if (color === 'emerald-500') return '#10b981';
-                                    if (color === 'slate-400') return '#94a3b8';
-                                    if (color === 'slate-700') return '#334155';
-                                    if (color === 'gray-400') return '#9ca3af';
-                                    if (color === 'gray-200') return '#e5e7eb';
-                                    if (color === 'gray-900') return '#111827';
-                                    if (color === 'gray-800') return '#1f2937';
-                                    if (color === 'gray-700') return '#374151';
-                                    if (color === 'gray-100') return '#f3f4f6';
-                                    if (color === 'gray-50') return '#f9fafb';
-                                    return color;
-                                  });
-                                return `linear-gradient(to right, ${stops.join(', ')})`;
-                              })()
-                            }}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                    <span className="text-xs text-black mt-1">{profile.banner}</span>
-                  </div>
-                  {/* Font Style */}
-                  <div className="flex-1 flex flex-col items-start">
-                    <label className="text-xs text-gray-500 mb-1 font-semibold">Font Style</label>
-                    <div className="flex gap-2">
-                      {fonts.map((f) => (
-                        <button
-                          key={f.class}
-                          type="button"
-                          className={`px-3 py-1 rounded-full border-2 ${font === f.class ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'} font-semibold text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-400`}
-                          onClick={() => setFont(f.class)}
-                        >
-                          {f.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-              {/* Social Media Section - Redesigned */}
-              <div className="w-full mb-4">
-                <label className="text-xs text-gray-500 mb-1 block">Social Media</label>
-                <div className="flex flex-row flex-wrap gap-2 mb-2">
-                  {socialPlatforms.map(platform => {
-                    const hasValue = !!profile.socials?.[platform.key];
-                    return (
+                {/* Avatar */}
+                <div className="relative z-10 -mt-20 mb-3 flex flex-col items-center">
+                  {editing ? (
+                    <>
+                      <img
+                        src={profile.avatar}
+                        alt="Avatar Preview"
+                        className="w-36 h-36 rounded-full border-4 border-white shadow-xl object-cover bg-gray-100 mb-2"
+                      />
                       <button
-                        key={platform.key}
                         type="button"
-                        className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 ${hasValue ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'} hover:bg-gray-100`}
-                        aria-label={platform.name}
-                        onClick={() => setActiveSocial(platform.key)}
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-3 py-1 text-xs rounded-full bg-black text-white font-semibold shadow hover:bg-gray-900 transition mb-2 border border-gray-700"
                       >
-                        {platform.icon}
-                        {hasValue && <span className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full border-2 border-white" />}
+                        Upload Avatar
                       </button>
-                    );
-                  })}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarUpload}
+                        className="hidden"
+                      />
+                    </>
+                  ) : (
+                    <img
+                      src={profile.avatar}
+                      alt="Avatar"
+                      className="w-36 h-36 rounded-full border-4 border-white shadow-xl object-cover bg-gray-100"
+                    />
+                  )}
                 </div>
-                {activeSocial && (
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="w-6 h-6 flex items-center justify-center">{socialPlatforms.find(p => p.key === activeSocial)?.icon}</span>
+                {/* Display Name, Pronouns & Tagline */}
+                {editing ? (
+                  <>
+                    {usernameLocked ? (
+                      <input
+                        type="text"
+                        name="username"
+                        value={profile.username}
+                        className="text-base font-mono text-blue-700 text-center w-full mb-1 border rounded p-2 bg-gray-100 cursor-not-allowed"
+                        disabled
+                        readOnly
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        name="username"
+                        value={profile.username}
+                        onChange={e => setProfile(prev => ({ ...prev, username: e.target.value }))}
+                        className={`text-base font-mono text-blue-700 text-center w-full mb-1 border rounded p-2 ${usernameLocked ? 'bg-gray-100 cursor-not-allowed' : ''} focus:ring-2 focus:ring-blue-400 outline-none`}
+                        placeholder="Username (unique, a-z, 0-9, _ only)"
+                        maxLength={20}
+                        pattern="^[a-zA-Z0-9_]{3,20}$"
+                        required
+                        disabled={usernameLocked}
+                        readOnly={usernameLocked}
+                      />
+                    )}
                     <input
                       type="text"
-                      value={profile.socials?.[activeSocial] || ''}
-                      onChange={e => setProfile(prev => ({
-                        ...prev,
-                        socials: { ...prev.socials, [activeSocial]: e.target.value }
-                      }))}
-                      className="flex-1 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
-                      placeholder={`Your ${socialPlatforms.find(p => p.key === activeSocial)?.name} URL`}
+                      name="displayName"
+                      value={profile.displayName}
+                      onChange={handleChange}
+                      className="text-3xl font-extrabold text-black text-center w-full mb-1 border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+                      placeholder="Display Name"
+                      maxLength={32}
+                      autoFocus
+                    />
+                    <input
+                      type="text"
+                      name="pronouns"
+                      value={profile.pronouns}
+                      onChange={handleChange}
+                      className="text-sm text-gray-700 text-center w-full mb-1 border rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+                      placeholder="Pronouns (e.g. she/her, he/him, they/them)"
+                      maxLength={32}
+                    />
+                    <input
+                      type="text"
+                      name="tagline"
+                      value={profile.tagline}
+                      onChange={handleChange}
+                      className="text-base text-gray-700 mb-3 w-full border rounded p-2 focus:ring-2 focus:ring-pink-400 outline-none"
+                      placeholder="Tagline"
                       maxLength={64}
                     />
-                    <button
-                      type="button"
-                      onClick={() => setProfile(prev => ({
-                        ...prev,
-                        socials: { ...prev.socials, [activeSocial]: '' }
-                      }))}
-                      className="text-xs px-2 py-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
-                      title="Remove"
-                    >
-                      ✕
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveSocial(null)}
-                      className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      title="Done"
-                    >
-                      Done
-                    </button>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-3xl font-extrabold text-black tracking-tight">{profile.displayName}</h1>
+                    {profile.pronouns && (
+                      <div className="text-xs text-gray-600 font-semibold mb-1">{profile.pronouns}</div>
+                    )}
+                    <p className="text-base text-gray-700 mb-3">{profile.tagline}</p>
+                  </>
+                )}
+                {/* About/Bio */}
+                {editing ? (
+                  <textarea
+                    name="bio"
+                    value={profile.bio}
+                    onChange={handleChange}
+                    className="text-center text-gray-800 mb-5 w-full border rounded p-2 focus:ring-2 focus:ring-fuchsia-400 outline-none"
+                    rows={4}
+                    placeholder="About/Bio"
+                    maxLength={300}
+                  />
+                ) : (
+                  <p className="text-center text-gray-800 mb-5 whitespace-pre-line">{profile.bio}</p>
+                )}
+                {/* Custom Links Section */}
+                <div className="w-full mb-4">
+                  <label className="text-xs text-gray-500 mb-1 block">Custom Links</label>
+                  {editing ? (
+                    <>
+                      {profile.links.map((link, i) => (
+                        <div key={i} className="flex gap-2 mb-2 items-center">
+                          <input
+                            type="text"
+                            value={link.label}
+                            onChange={e => handleLinkChange(i, 'label', e.target.value)}
+                            className="w-32 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
+                            placeholder="Label"
+                            maxLength={24}
+                          />
+                          <input
+                            type="text"
+                            value={link.url}
+                            onChange={e => handleLinkChange(i, 'url', e.target.value)}
+                            className="flex-1 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
+                            placeholder="https://example.com"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeLink(i)}
+                            className="text-xs px-2 py-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                            title="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={addLink}
+                        className="mt-1 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold hover:bg-blue-200"
+                      >
+                        + Add Link
+                      </button>
+                    </>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {profile.links.filter(l => l.label && l.url).map((link, i) => (
+                        <a
+                          key={i}
+                          href={link.url}
+                          className="flex items-center gap-2 px-3 py-2 rounded bg-gray-100 hover:bg-blue-50 text-black font-semibold text-xs transition"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span className="truncate">{link.label}</span>
+                          <span className="truncate text-gray-400">{link.url.replace(/^https?:\/\//, '')}</span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {/* Gallery Section */}
+                <div className="w-full mb-4">
+                  <label className="text-xs text-gray-500 mb-1 block">Gallery (up to 9 images)</label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {profile.gallery && profile.gallery.map((img, i) => (
+                      <div key={i} className="relative group">
+                        <img src={img} alt={`Gallery ${i + 1}`} className="w-20 h-20 object-cover rounded-lg border shadow" />
+                        {editing && (
+                          <button
+                            type="button"
+                            onClick={() => removeGalleryImage(i)}
+                            className="absolute top-1 right-1 bg-white/80 text-red-600 rounded-full p-1 text-xs shadow group-hover:scale-110 transition"
+                            title="Remove"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    {editing && profile.gallery.length < 9 && (
+                      <button
+                        type="button"
+                        onClick={() => galleryInputRef.current?.click()}
+                        className="w-20 h-20 flex items-center justify-center border-2 border-dashed border-blue-300 rounded-lg text-blue-400 hover:bg-blue-50 text-3xl font-bold"
+                        title="Add Image"
+                      >
+                        +
+                      </button>
+                    )}
+                    <input
+                      ref={galleryInputRef}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleGalleryUpload}
+                      className="hidden"
+                    />
+                  </div>
+                </div>
+                {/* Gradient & Font Picker - Redesigned */}
+                {editing && (
+                  <div className="w-full flex flex-col sm:flex-row gap-4 items-start mb-6 mt-2">
+                    {/* Color Theme */}
+                    <div className="flex-1 flex flex-col items-start">
+                      <label className="text-xs text-gray-500 mb-1 font-semibold">Profile Color Theme</label>
+                      <div className="flex flex-wrap gap-2">
+                        {gradients.map((g) => (
+                          <button
+                            key={g.name}
+                            type="button"
+                            className={`w-8 h-8 rounded-full border-2 ${profile.banner === g.name ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200'} focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center`}
+                            aria-label={g.name}
+                            onClick={() => setProfile(prev => ({ ...prev, banner: g.name }))}
+                            style={{ padding: 0, background: 'none' }}
+                          >
+                            <span
+                              className="block w-6 h-6 rounded-full"
+                              style={{
+                                background: (() => {
+                                  // Extract color stops from Tailwind classes
+                                  const stops = g.banner.split(' ')
+                                    .map(cls => {
+                                      // Remove from-, via-, to- and get the color name
+                                      const color = cls.replace('from-', '').replace('via-', '').replace('to-', '');
+                                      // If it's a Tailwind color, use the mapping, else fallback to the color string
+                                      if (tailwindToHex[color]) return tailwindToHex[color];
+                                      // Hardcoded fallback for lime-200 and slate-400/slate-700
+                                      if (color === 'lime-200') return '#d9f99d';
+                                      if (color === 'lime-400') return '#a3e635';
+                                      if (color === 'emerald-200') return '#a7f3d0';
+                                      if (color === 'emerald-500') return '#10b981';
+                                      if (color === 'slate-400') return '#94a3b8';
+                                      if (color === 'slate-700') return '#334155';
+                                      if (color === 'gray-400') return '#9ca3af';
+                                      if (color === 'gray-200') return '#e5e7eb';
+                                      if (color === 'gray-900') return '#111827';
+                                      if (color === 'gray-800') return '#1f2937';
+                                      if (color === 'gray-700') return '#374151';
+                                      if (color === 'gray-100') return '#f3f4f6';
+                                      if (color === 'gray-50') return '#f9fafb';
+                                      return color;
+                                    });
+                                  return `linear-gradient(to right, ${stops.join(', ')})`;
+                                })()
+                              }}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      <span className="text-xs text-black mt-1">{profile.banner}</span>
+                    </div>
+                    {/* Font Style */}
+                    <div className="flex-1 flex flex-col items-start">
+                      <label className="text-xs text-gray-500 mb-1 font-semibold">Font Style</label>
+                      <div className="flex gap-2">
+                        {fonts.map((f) => (
+                          <button
+                            key={f.class}
+                            type="button"
+                            className={`px-3 py-1 rounded-full border-2 ${font === f.class ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'} font-semibold text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-400`}
+                            onClick={() => setFont(f.class)}
+                          >
+                            {f.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
-              </div>
-              {/* Edit/Save Button */}
-              <button
-                onClick={editing ? saveProfile : () => setEditing(true)}
-                className="mt-2 px-6 py-2 rounded-full bg-black text-white font-semibold shadow hover:bg-gray-900 transition focus:outline-none focus:ring-2 focus:ring-gray-700 border border-gray-700"
-              >
-                {editing ? "Save" : "Edit Profile"}
-              </button>
-              {/* Customization note */}
-              <span className="text-xs text-gray-400 mt-3">Your own platform bio card – make it yours!</span>
-            </section>
-          </main>
+                {/* Social Media Section - Redesigned */}
+                <div className="w-full mb-4">
+                  <label className="text-xs text-gray-500 mb-1 block">Social Media</label>
+                  <div className="flex flex-row flex-wrap gap-2 mb-2">
+                    {socialPlatforms.map(platform => {
+                      const hasValue = !!profile.socials?.[platform.key];
+                      return (
+                        <button
+                          key={platform.key}
+                          type="button"
+                          className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 ${hasValue ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'} hover:bg-gray-100`}
+                          aria-label={platform.name}
+                          onClick={() => setActiveSocial(platform.key)}
+                        >
+                          {platform.icon}
+                          {hasValue && <span className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full border-2 border-white" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {activeSocial && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="w-6 h-6 flex items-center justify-center">{socialPlatforms.find(p => p.key === activeSocial)?.icon}</span>
+                      <input
+                        type="text"
+                        value={profile.socials?.[activeSocial] || ''}
+                        onChange={e => setProfile(prev => ({
+                          ...prev,
+                          socials: { ...prev.socials, [activeSocial]: e.target.value }
+                        }))}
+                        className="flex-1 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
+                        placeholder={`Your ${socialPlatforms.find(p => p.key === activeSocial)?.name} URL`}
+                        maxLength={64}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setProfile(prev => ({
+                          ...prev,
+                          socials: { ...prev.socials, [activeSocial]: '' }
+                        }))}
+                        className="text-xs px-2 py-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                        title="Remove"
+                      >
+                        ✕
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveSocial(null)}
+                        className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        title="Done"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {/* Edit/Save Button */}
+                <button
+                  onClick={editing ? saveProfile : () => setEditing(true)}
+                  className="mt-2 px-6 py-2 rounded-full bg-black text-white font-semibold shadow hover:bg-gray-900 transition focus:outline-none focus:ring-2 focus:ring-gray-700 border border-gray-700"
+                >
+                  {editing ? "Save" : "Edit Profile"}
+                </button>
+                {/* Customization note */}
+                <span className="text-xs text-gray-400 mt-3">Your own platform bio card – make it yours!</span>
+              </section>
+            </main>
+          )}
         </>
       ) : (
         <AuthUI />

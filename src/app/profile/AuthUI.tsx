@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
+import { FaDiscord, FaGoogle, FaTwitter } from 'react-icons/fa';
 
 export default function AuthUI() {
   const [email, setEmail] = useState('');
@@ -19,7 +20,12 @@ export default function AuthUI() {
     setLoading(true);
     setError('');
     setMessage('');
-
+    const reqs = getPasswordRequirements(password);
+    if (!reqs.length || !reqs.lowercase || !reqs.uppercase || !reqs.digit || !reqs.symbol) {
+      setError('Password must be at least 8 characters and include lowercase, uppercase, digit, and symbol.');
+      setLoading(false);
+      return;
+    }
     const { error: signUpError } = await supabase.auth.signUp({ email, password });
     if (signUpError) {
       setError(signUpError.message);
@@ -46,9 +52,19 @@ export default function AuthUI() {
     setLoading(true);
     setError('');
     setMessage('');
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
     if (error) setError(error.message);
-    else setMessage('Password reset email sent!');
+    else setMessage('Password reset email sent! Please check your email and follow the link to set a new password.');
+    setLoading(false);
+  }
+
+  // Third-party OAuth sign-in
+  async function handleOAuth(provider: 'discord' | 'google' | 'twitter') {
+    setLoading(true);
+    setError('');
+    setMessage('');
+    const { error } = await supabase.auth.signInWithOAuth({ provider });
+    if (error) setError(error.message);
     setLoading(false);
   }
 
@@ -79,6 +95,18 @@ export default function AuthUI() {
     return () => { listener?.subscription.unsubscribe(); };
   }, [router]);
 
+  // Password strength requirements for sign up
+  function getPasswordRequirements(pw: string) {
+    return {
+      length: pw.length >= 8,
+      lowercase: /[a-z]/.test(pw),
+      uppercase: /[A-Z]/.test(pw),
+      digit: /[0-9]/.test(pw),
+      symbol: /[^A-Za-z0-9]/.test(pw),
+    };
+  }
+  const passwordReqs = getPasswordRequirements(password);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-white via-gray-100 to-gray-300 text-black font-serif">
       {/* Animated background shapes (subtle grayscale + bold black splurges) */}
@@ -102,6 +130,36 @@ export default function AuthUI() {
           </svg>
           WhoAmEye
         </span>
+        {/* Third-party OAuth Providers */}
+        <div className="w-full flex flex-col gap-3 mb-6">
+          <button
+            type="button"
+            onClick={() => handleOAuth('google')}
+            className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-white text-black font-bold shadow hover:bg-gray-100 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+            aria-label="Sign in with Google"
+            disabled={loading}
+          >
+            <FaGoogle className="text-xl" /> Sign in with Google
+          </button>
+          <button
+            type="button"
+            onClick={() => handleOAuth('discord')}
+            className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-[#5865F2] text-white font-bold shadow hover:bg-[#4752c4] transition text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            aria-label="Sign in with Discord"
+            disabled={loading}
+          >
+            <FaDiscord className="text-xl" /> Sign in with Discord
+          </button>
+          <button
+            type="button"
+            onClick={() => handleOAuth('twitter')}
+            className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-[#1da1f2] text-white font-bold shadow hover:bg-[#0d8ddb] transition text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
+            aria-label="Sign in with Twitter"
+            disabled={loading}
+          >
+            <FaTwitter className="text-xl" /> Sign in with Twitter
+          </button>
+        </div>
         {/* Redesigned Auth Section */}
         <div className="w-full flex flex-col gap-6">
           <div className="flex justify-center gap-2 mb-2">
@@ -249,6 +307,14 @@ export default function AuthUI() {
                   >
                     {showPassword ? 'Hide' : 'Show'}
                   </button>
+                </div>
+                {/* Password requirements pills */}
+                <div className="flex flex-wrap gap-2 mb-2">
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.length ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>8+ chars</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.lowercase ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>lowercase</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.uppercase ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>uppercase</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.digit ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>digit</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.symbol ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>symbol</span>
                 </div>
                 <button
                   type="submit"
