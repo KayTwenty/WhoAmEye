@@ -120,223 +120,231 @@ export default function AuthUI() {
         <div className="absolute bottom-[8%] right-[8%] w-[140px] h-[100px] bg-black/70 rounded-[50%_60%_40%_60%/60%_40%_60%_50%] blur-2xl opacity-60 animate-float-medium" style={{ animationDelay: '1.5s' }} />
         <div className="absolute top-[60%] left-[70%] w-[100px] h-[70px] bg-black/60 rounded-[60%_40%_60%_40%/40%_60%_40%_60%] blur-2xl opacity-50 animate-float-fast" style={{ animationDelay: '2.5s' }} />
       </div>
-      <div className="w-full max-w-md mx-auto bg-white/95 rounded-3xl shadow-2xl p-8 border border-gray-300 flex flex-col items-center z-10">
-        <span className="flex items-center font-extrabold text-3xl mb-8 text-black tracking-tight drop-shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="38" height="38" className="mr-2 drop-shadow-xl" aria-hidden="true">
-            <ellipse cx="20" cy="20" rx="16" ry="10" fill="#fff" fillOpacity="0.10" stroke="#222" strokeWidth="2.5" />
-            <ellipse cx="20" cy="20" rx="13" ry="8" fill="#222" fillOpacity="0.08" />
-            <circle cx="20" cy="20" r="6.5" fill="#222" />
-            <circle cx="22.5" cy="18.5" r="2.2" fill="#fff" fillOpacity="0.9" />
-          </svg>
-          WhoAmEye
-        </span>
-        {/* Third-party OAuth Providers */}
-        <div className="w-full flex flex-col gap-3 mb-6">
-          <button
-            type="button"
-            onClick={() => handleOAuth('google')}
-            className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-white text-black font-bold shadow hover:bg-gray-100 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
-            aria-label="Sign in with Google"
-            disabled={loading}
-          >
-            <FaGoogle className="text-xl" /> Sign in with Google
-          </button>
-          <button
-            type="button"
-            onClick={() => handleOAuth('discord')}
-            className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-[#5865F2] text-white font-bold shadow hover:bg-[#4752c4] transition text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            aria-label="Sign in with Discord"
-            disabled={loading}
-          >
-            <FaDiscord className="text-xl" /> Sign in with Discord
-          </button>
-          <button
-            type="button"
-            onClick={() => handleOAuth('twitter')}
-            className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-[#1da1f2] text-white font-bold shadow hover:bg-[#0d8ddb] transition text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
-            aria-label="Sign in with Twitter"
-            disabled={loading}
-          >
-            <FaTwitter className="text-xl" /> Sign in with Twitter
-          </button>
-        </div>
-        {/* Redesigned Auth Section */}
-        <div className="w-full flex flex-col gap-6">
-          <div className="flex justify-center gap-2 mb-2">
-            <button
-              className={`px-4 py-2 rounded-l-lg border border-gray-300 bg-black text-white font-bold transition-all duration-150 ${mode === 'signin' && !resetMode ? 'bg-gray-900 border-gray-900' : 'hover:bg-gray-200 hover:text-black'}`}
-              onClick={() => { setMode('signin'); setResetMode(false); setError(''); setMessage(''); }}
-              type="button"
-              aria-pressed={mode === 'signin' && !resetMode}
-            >
-              Sign In
-            </button>
-            <button
-              className={`px-4 py-2 rounded-r-lg border border-gray-300 bg-white text-black font-bold transition-all duration-150 ${mode === 'signup' && !resetMode ? 'bg-gray-200 border-gray-900' : 'hover:bg-gray-100'}`}
-              onClick={() => { setMode('signup'); setResetMode(false); setError(''); setMessage(''); }}
-              type="button"
-              aria-pressed={mode === 'signup' && !resetMode}
-            >
-              Sign Up
-            </button>
-          </div>
-          {/* Auth Forms */}
-          <div className="rounded-xl bg-white/90 border border-gray-200 shadow p-6 flex flex-col gap-4">
-            {resetMode ? (
-              <form className="flex flex-col gap-4 w-full" onSubmit={handlePasswordReset} aria-label="Password reset form">
-                <h2 className="text-xl font-bold text-center mb-2">Reset Password</h2>
-                <input
-                  id="reset-email"
-                  type="email"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg bg-white text-black"
-                  required
-                  autoFocus
-                  aria-required="true"
-                  aria-label="Email address"
-                />
-                <button
-                  type="submit"
-                  className="bg-black text-white rounded-full p-3 font-bold shadow hover:brightness-110 transition disabled:opacity-50 text-lg border border-gray-800"
-                  disabled={loading}
-                  aria-busy={loading}
-                >
-                  {loading ? 'Sending...' : 'Send Password Reset Email'}
-                </button>
-                <div className="text-center mt-2 text-sm text-gray-500">
-                  Remembered?{' '}
-                  <button type="button" className="underline text-black hover:text-gray-700 font-semibold" onClick={() => { setResetMode(false); setError(''); setMessage(''); }}>
-                    Back to sign in
-                  </button>
-                </div>
-              </form>
-            ) : mode === 'signin' ? (
-              <form className="flex flex-col gap-4 w-full" onSubmit={handleSignIn} aria-label="Sign in form">
-                <h2 className="text-xl font-bold text-center mb-2">Welcome Back</h2>
-                <input
-                  id="signin-email"
-                  type="email"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg bg-white text-black"
-                  required
-                  autoFocus
-                  aria-required="true"
-                  aria-label="Email address"
-                />
-                <div className="relative">
-                  <input
-                    id="signin-password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg w-full pr-12 bg-white text-black"
-                    required
-                    aria-required="true"
-                    aria-label="Password"
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-black font-semibold"
-                    onClick={() => setShowPassword(v => !v)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? 'Hide' : 'Show'}
-                  </button>
-                </div>
-                <button
-                  type="submit"
-                  className="bg-black text-white rounded-full p-3 font-bold shadow hover:brightness-110 transition disabled:opacity-50 text-lg border border-gray-800"
-                  disabled={loading}
-                  aria-busy={loading}
-                >
-                  {loading ? 'Signing In...' : 'Sign In'}
-                </button>
-                <div className="flex flex-col gap-2 text-center mt-2 text-sm text-gray-500">
-                  <span>
-                    <button type="button" className="inline-flex items-center gap-1 underline text-black hover:text-gray-700 font-semibold transition" onClick={() => { setMode('signup'); setError(''); setMessage(''); }}>
-                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="inline-block"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
-                      Create an account
-                    </button>
-                  </span>
-                  <span>
-                    <button type="button" className="inline-flex items-center gap-1 underline text-black hover:text-gray-700 font-semibold transition" onClick={() => { setResetMode(true); setError(''); setMessage(''); }}>
-                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="inline-block"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 17v-6m0 0V7m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" /></svg>
-                      Forgot password?
-                    </button>
-                  </span>
-                </div>
-              </form>
-            ) : (
-              <form className="flex flex-col gap-4 w-full" onSubmit={handleSignUp} aria-label="Sign up form">
-                <h2 className="text-xl font-bold text-center mb-2">Create Your Account</h2>
-                <input
-                  id="signup-email"
-                  type="email"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg bg-white text-black"
-                  required
-                  aria-required="true"
-                  aria-label="Email address"
-                />
-                <div className="relative">
-                  <input
-                    id="signup-password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg w-full pr-12 bg-white text-black"
-                    required
-                    aria-required="true"
-                    aria-label="Password"
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-black font-semibold"
-                    onClick={() => setShowPassword(v => !v)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? 'Hide' : 'Show'}
-                  </button>
-                </div>
-                {/* Password requirements pills */}
-                <div className="flex flex-wrap gap-2 mb-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.length ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>8+ chars</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.lowercase ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>lowercase</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.uppercase ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>uppercase</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.digit ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>digit</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.symbol ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>symbol</span>
-                </div>
-                <button
-                  type="submit"
-                  className="bg-black text-white rounded-full p-3 font-bold shadow hover:brightness-110 transition disabled:opacity-50 text-lg border border-gray-800"
-                  disabled={loading}
-                  aria-busy={loading}
-                >
-                  {loading ? 'Signing Up...' : 'Sign Up'}
-                </button>
-                <div className="text-center mt-2 text-sm text-gray-500">
-                  Already have an account?{' '}
-                  <button type="button" className="underline text-black hover:text-gray-700 font-semibold" onClick={() => { setMode('signin'); setError(''); setMessage(''); }}>
-                    Sign in
-                  </button>
-                </div>
-              </form>
-            )}
+      <div className="w-full max-w-3xl mx-auto bg-white/95 rounded-3xl shadow-2xl p-0 border border-gray-300 flex flex-col md:flex-row items-stretch z-10 overflow-hidden">
+        {/* Left: Info/Advertising */}
+        <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100 border-r border-indigo-200 p-8 gap-6 animate-gradient-move">
+          <span className="flex items-center font-extrabold text-3xl text-black tracking-tight drop-shadow-lg mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="38" height="38" className="mr-2 drop-shadow-xl" aria-hidden="true">
+              <ellipse cx="20" cy="20" rx="16" ry="10" fill="#fff" fillOpacity="0.10" stroke="#222" strokeWidth="2.5" />
+              <ellipse cx="20" cy="20" rx="13" ry="8" fill="#222" fillOpacity="0.08" />
+              <circle cx="20" cy="20" r="6.5" fill="#222" />
+              <circle cx="22.5" cy="18.5" r="2.2" fill="#fff" fillOpacity="0.9" />
+            </svg>
+            WhoAmEye
+          </span>
+          <div className="text-2xl font-extrabold text-black mb-2 text-center">Create your own beautiful, social bio card</div>
+          <div className="text-base text-gray-700 text-center max-w-xs">Show off your personality, connect all your links, and join a friendly community.<br /><span className="font-bold text-indigo-700">No spam. No ads. Just you.</span></div>
+          <div className="inline-flex items-center gap-1 text-sm text-gray-600 mt-1"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>Free forever &bull; No credit card needed</div>
+          <div className="w-full flex flex-col items-center gap-2 mt-4">
+            <span className="text-sm text-gray-500 font-medium">Join <span className="font-bold text-indigo-700">thousands</span> of creators, artists, and friends</span>
+            <span className="inline-flex items-center gap-1 text-xs text-gray-400"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4zm-8 0c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z" /></svg>We respect your privacy. Your data is <span className="font-bold text-black ml-1">never sold</span>.</span>
           </div>
         </div>
-        {error && <div className="text-red-600 mt-4 text-base text-center font-semibold" role="alert">{getFriendlyError(error)}</div>}
-        {message && <div className="text-green-600 mt-4 text-base text-center font-semibold" role="status">{message}</div>}
-        <div className="mt-8 text-xs text-gray-500 text-center">Proudly made for everyone 🏳️‍🌈</div>
+        {/* Right: Auth UI */}
+        <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8">
+          {/* Mobile logo/title */}
+          <span className="flex md:hidden items-center font-extrabold text-3xl mb-8 text-black tracking-tight drop-shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="38" height="38" className="mr-2 drop-shadow-xl" aria-hidden="true">
+              <ellipse cx="20" cy="20" rx="16" ry="10" fill="#fff" fillOpacity="0.10" stroke="#222" strokeWidth="2.5" />
+              <ellipse cx="20" cy="20" rx="13" ry="8" fill="#222" fillOpacity="0.08" />
+              <circle cx="20" cy="20" r="6.5" fill="#222" />
+              <circle cx="22.5" cy="18.5" r="2.2" fill="#fff" fillOpacity="0.9" />
+            </svg>
+            WhoAmEye
+          </span>
+          {/* SSO Buttons */}
+          <div className="w-full flex flex-col gap-3 mb-6">
+            <button
+              type="button"
+              onClick={() => handleOAuth('google')}
+              className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-white text-black font-bold shadow hover:bg-gray-100 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+              aria-label="Sign in with Google"
+              disabled={loading}
+            >
+              <FaGoogle className="text-xl" /> Sign in with Google
+            </button>
+            <button
+              type="button"
+              onClick={() => handleOAuth('discord')}
+              className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-[#5865F2] text-white font-bold shadow hover:bg-[#4752c4] transition text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              aria-label="Sign in with Discord"
+              disabled={loading}
+            >
+              <FaDiscord className="text-xl" /> Sign in with Discord
+            </button>
+            <button
+              type="button"
+              onClick={() => handleOAuth('twitter')}
+              className="flex items-center justify-center gap-3 w-full py-3 rounded-lg border border-gray-300 bg-[#1da1f2] text-white font-bold shadow hover:bg-[#0d8ddb] transition text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
+              aria-label="Sign in with Twitter"
+              disabled={loading}
+            >
+              <FaTwitter className="text-xl" /> Sign in with Twitter
+            </button>
+          </div>
+          {/* Auth Section (Sign in/up/reset) */}
+          <div className="w-full flex flex-col gap-6">
+            {/* Auth Forms */}
+            <div className="rounded-xl bg-white/90 border border-gray-200 shadow p-6 flex flex-col gap-4">
+              {resetMode ? (
+                <form className="flex flex-col gap-4 w-full" onSubmit={handlePasswordReset} aria-label="Password reset form">
+                  <h2 className="text-xl font-bold text-center mb-2">Reset Password</h2>
+                  <input
+                    id="reset-email"
+                    type="email"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg bg-white text-black"
+                    required
+                    autoFocus
+                    aria-required="true"
+                    aria-label="Email address"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-black text-white rounded-full p-3 font-bold shadow hover:brightness-110 transition disabled:opacity-50 text-lg border border-gray-800"
+                    disabled={loading}
+                    aria-busy={loading}
+                  >
+                    {loading ? 'Sending...' : 'Password Reset'}
+                  </button>
+                  <div className="text-center mt-2 text-sm text-gray-500">
+                    Remembered?{' '}
+                    <button type="button" className="underline text-black hover:text-gray-700 font-semibold" onClick={() => { setResetMode(false); setError(''); setMessage(''); }}>
+                      Back to sign in
+                    </button>
+                  </div>
+                </form>
+              ) : mode === 'signin' ? (
+                <form className="flex flex-col gap-4 w-full" onSubmit={handleSignIn} aria-label="Sign in form">
+                  <h2 className="text-xl font-bold text-center mb-2">Welcome Back</h2>
+                  <div className="text-center text-sm text-gray-500 mb-2">Sign in to edit your card, add new links, and connect with others.</div>
+                  <input
+                    id="signin-email"
+                    type="email"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg bg-white text-black"
+                    required
+                    autoFocus
+                    aria-required="true"
+                    aria-label="Email address"
+                  />
+                  <div className="relative">
+                    <input
+                      id="signin-password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg w-full pr-12 bg-white text-black"
+                      required
+                      aria-required="true"
+                      aria-label="Password"
+                    />
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-black font-semibold"
+                      onClick={() => setShowPassword(v => !v)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-black text-white rounded-full p-3 font-bold shadow hover:brightness-110 transition disabled:opacity-50 text-lg border border-gray-800"
+                    disabled={loading}
+                    aria-busy={loading}
+                  >
+                    {loading ? 'Signing In...' : 'Sign In'}
+                  </button>
+                  <div className="flex flex-col gap-2 text-center mt-2 text-sm text-gray-500">
+                    <span>
+                      <button type="button" className="inline-flex items-center gap-1 underline text-black hover:text-gray-700 font-semibold transition" onClick={() => { setMode('signup'); setError(''); setMessage(''); }}>
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="inline-block"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
+                        Create an account
+                      </button>
+                    </span>
+                    <span>
+                      <button type="button" className="inline-flex items-center gap-1 underline text-black hover:text-gray-700 font-semibold transition" onClick={() => { setResetMode(true); setError(''); setMessage(''); }}>
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="inline-block"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 17v-6m0 0V7m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" /></svg>
+                        Forgot password?
+                      </button>
+                    </span>
+                  </div>
+                </form>
+              ) : (
+                <form className="flex flex-col gap-4 w-full" onSubmit={handleSignUp} aria-label="Sign up form">
+                  <h2 className="text-xl font-bold text-center mb-2">Create Your Account</h2>
+                  <div className="text-center text-base text-gray-600 mb-2">It takes less than a minute. You can always delete your account anytime.</div>
+                  <input
+                    id="signup-email"
+                    type="email"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg bg-white text-black"
+                    required
+                    aria-required="true"
+                    aria-label="Email address"
+                  />
+                  <div className="relative">
+                    <input
+                      id="signup-password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-gray-400 outline-none text-lg w-full pr-12 bg-white text-black"
+                      required
+                      aria-required="true"
+                      aria-label="Password"
+                    />
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-black font-semibold"
+                      onClick={() => setShowPassword(v => !v)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
+                  {/* Password requirements pills */}
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.length ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>8+ chars</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.lowercase ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>lowercase</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.uppercase ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>uppercase</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.digit ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>digit</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${passwordReqs.symbol ? 'bg-green-200 text-green-800 border-green-400' : 'bg-gray-100 text-gray-500 border-gray-300'}`}>symbol</span>
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-gradient-to-r from-indigo-600 via-pink-500 to-yellow-400 text-white rounded-full p-3 font-bold shadow hover:brightness-110 transition disabled:opacity-50 text-lg border border-gray-800 animate-gradient-move"
+                    disabled={loading}
+                    aria-busy={loading}
+                  >
+                    {loading ? 'Signing Up...' : 'Sign Up & Get Started'}
+                  </button>
+                  <div className="text-center mt-2 text-sm text-gray-500">
+                    Already have an account?{' '}
+                    <button type="button" className="underline text-black hover:text-gray-700 font-semibold" onClick={() => { setMode('signin'); setError(''); setMessage(''); }}>
+                      Sign in
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+          {/* Error/Message feedback with icons */}
+          {error && <div className="text-red-600 mt-4 text-base text-center font-semibold" role="alert">{getFriendlyError(error)}</div>}
+          {message && <div className="text-green-600 mt-4 text-base text-center font-semibold" role="status">{message}</div>}
+          <div className="mt-8 text-xs text-gray-500 text-center">Proudly made for everyone 🏳️‍🌈<br /><span className="text-[10px] text-gray-400">No spam. No ads. Delete anytime.</span></div>
+        </div>
       </div>
       <style jsx global>{`
         @keyframes gradient-move {
