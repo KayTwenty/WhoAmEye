@@ -9,9 +9,6 @@ export default function GalleryModal({ gallery }: { gallery: string[] }) {
   const [isSwiping, setIsSwiping] = useState(false);
   const touchStart = useRef<number | null>(null);
 
-  // Early return after hooks
-  if (!gallery || gallery.length === 0) return null;
-
   // Helper to get current index
   const currentIndex = enlargedImg ? gallery.findIndex(img => img === enlargedImg) : -1;
   const hasPrev = currentIndex > 0;
@@ -52,6 +49,9 @@ export default function GalleryModal({ gallery }: { gallery: string[] }) {
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [enlargedImg, currentIndex, hasPrev, hasNext, gallery]);
+
+  // Early return after all hooks
+  if (!gallery || gallery.length === 0) return null;
 
   return (
     <div className="w-full mb-4">

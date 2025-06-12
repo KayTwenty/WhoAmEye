@@ -77,7 +77,10 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
                       text: 'See my profile on WhoAmEye:',
                       url: shareUrl,
                     });
-                  } catch (e) { /* user cancelled or error */ }
+                  } catch (error) {
+                    console.error('Error sharing:', error);
+                    toast.error('Failed to share profile.');
+                  }
                   return;
                 }
                 setShareOpen((v) => !v);
