@@ -150,18 +150,20 @@ export default async function PublicProfileByUsername({ params }: { params: Prom
           <p className="text-center text-gray-800 mb-5 whitespace-pre-line">{profile.bio}</p>
           {/* Custom Links Section */}
           <div className="w-full mb-4">
-            <label className="text-xs text-gray-500 mb-1 block">Custom Links</label>
+            <label className="text-xs text-gray-500 mb-1 block font-semibold tracking-wide uppercase">Custom Links</label>
             <div className="flex flex-col gap-2">
               {links.filter((l) => l.label && l.url).map((link, i) => (
                 <a
                   key={i}
                   href={link.url}
-                  className="flex items-center gap-2 px-3 py-2 rounded bg-gray-100 hover:bg-blue-50 text-black font-semibold text-xs transition"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-gray-100 via-white to-gray-50 hover:from-blue-50 hover:to-blue-100 border border-gray-200 text-black font-semibold text-base shadow-sm hover:shadow-md transition group"
                   target="_blank"
                   rel="noopener noreferrer"
+                  style={{ minHeight: '48px' }}
                 >
-                  <span className="truncate">{link.label}</span>
-                  <span className="truncate text-gray-400">{link.url.replace(/^https?:\/\//, '')}</span>
+                  <span className="truncate font-bold text-blue-800 group-hover:underline text-base">{link.label}</span>
+                  <span className="truncate text-gray-400 text-xs hidden sm:inline">{link.url.replace(/^https?:\/\//, '')}</span>
+                  <svg className="ml-auto w-4 h-4 text-blue-400 group-hover:text-blue-700 transition" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </a>
               ))}
             </div>

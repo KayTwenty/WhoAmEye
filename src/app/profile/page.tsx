@@ -482,30 +482,31 @@ export default function ProfilePage() {
                 )}
                 {/* Custom Links Section */}
                 <div className="w-full mb-4">
-                  <label className="text-xs text-gray-500 mb-1 block">Custom Links</label>
+                  <label className="text-xs text-gray-500 mb-1 block font-semibold tracking-wide uppercase">Custom Links</label>
                   {editing ? (
-                    <>
+                    <div className="flex flex-col gap-2">
                       {profile.links.map((link, i) => (
-                        <div key={i} className="flex gap-2 mb-2 items-center">
+                        <div key={i} className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 shadow-sm hover:shadow-md transition-all group">
                           <input
                             type="text"
                             value={link.label}
                             onChange={e => handleLinkChange(i, 'label', e.target.value)}
-                            className="w-32 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
+                            className="w-28 sm:w-36 text-xs border-none bg-transparent font-semibold text-black focus:ring-2 focus:ring-blue-400 outline-none rounded placeholder-gray-400 group-hover:bg-white transition"
                             placeholder="Label"
                             maxLength={24}
                           />
+                          <span className="text-gray-300 font-bold">|</span>
                           <input
                             type="text"
                             value={link.url}
                             onChange={e => handleLinkChange(i, 'url', e.target.value)}
-                            className="flex-1 text-xs border rounded p-1 focus:ring-2 focus:ring-blue-400 outline-none text-black"
+                            className="flex-1 text-xs border-none bg-transparent text-blue-700 focus:ring-2 focus:ring-blue-400 outline-none rounded placeholder-gray-400 group-hover:bg-white transition"
                             placeholder="https://example.com"
                           />
                           <button
                             type="button"
                             onClick={() => removeLink(i)}
-                            className="text-xs px-2 py-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                            className="ml-1 text-xs px-2 py-1 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition shadow-sm"
                             title="Remove"
                           >
                             ✕
@@ -515,22 +516,22 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={addLink}
-                        className="mt-1 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold hover:bg-blue-200"
+                        className="mt-1 px-4 py-2 rounded-xl bg-blue-100 text-blue-700 text-xs font-bold hover:bg-blue-200 border border-blue-200 shadow-sm transition w-fit self-center"
                       >
                         + Add Link
                       </button>
-                    </>
+                    </div>
                   ) : (
                     <div className="flex flex-col gap-2">
                       {profile.links.filter(l => l.label && l.url).map((link, i) => (
                         <a
                           key={i}
                           href={link.url}
-                          className="flex items-center gap-2 px-3 py-2 rounded bg-gray-100 hover:bg-blue-50 text-black font-semibold text-xs transition"
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-gray-100 via-white to-gray-50 hover:from-blue-50 hover:to-blue-100 border border-gray-200 text-black font-semibold text-xs shadow-sm hover:shadow-md transition group"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <span className="truncate">{link.label}</span>
+                          <span className="truncate font-bold text-blue-800 group-hover:underline">{link.label}</span>
                           <span className="truncate text-gray-400">{link.url.replace(/^https?:\/\//, '')}</span>
                         </a>
                       ))}
