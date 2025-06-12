@@ -32,7 +32,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-br from-white via-gray-100 to-gray-300 text-black font-serif">
-      <nav className="w-full flex items-center justify-between px-6 py-6 border-b border-gray-300 bg-white/90 backdrop-blur-md">
+      <nav className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-300 bg-white/90 backdrop-blur-md">
         <Link href="/" className="flex items-center group focus:outline-none" tabIndex={0} aria-label="Go to homepage">
           <span className="relative flex items-center">
             <svg
@@ -60,47 +60,51 @@ export default function Home() {
             <span className="text-[0.85em] align-super font-mono text-gray-500 ml-1 tracking-tight pb-0.5">.bio</span>
           </span>
         </Link>
-        <div className="flex items-center gap-3">
-          <a
-            href="https://github.com/KayTwenty/WhoAmEye"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2 rounded-full border border-gray-800 bg-white text-black font-bold shadow hover:bg-gray-100 hover:scale-105 transition-all duration-200 text-lg flex items-center gap-2"
-            aria-label="View on GitHub"
-          >
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.38-2.03 1.02-2.75-.1-.26-.44-1.3.1-2.7 0 0 .83-.27 2.75 1.02A9.36 9.36 0 0 1 12 6.84c.84.004 1.68.11 2.47.32 1.92-1.29 2.75-1.02 2.75-1.02.54 1.4.2 2.44.1 2.7.64.72 1.02 1.63 1.02 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg>
-            GitHub
-          </a>
-          <a href="/profile" className="px-6 py-2 rounded-full bg-black text-white font-bold shadow hover:scale-105 hover:shadow-xl transition-all duration-200 text-lg border border-gray-800">Sign In</a>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto mt-3 sm:mt-0 max-w-xs sm:max-w-none">
+          <a href="/profile" className="px-5 py-2 rounded-full bg-black text-white font-bold shadow hover:scale-105 hover:shadow-xl transition-all duration-200 text-base sm:text-lg border border-gray-800 w-full sm:w-auto text-center">Sign In</a>
         </div>
       </nav>
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-4xl sm:text-6xl font-extrabold mb-6 text-black drop-shadow-lg font-serif">Your Identity, Your Vibe.</h1>
-        <p className="max-w-2xl text-lg sm:text-2xl text-gray-700 mb-8 font-medium">Create a stunning, customizable profile card that stands out. Share your story, links, and gallery with the world. <span className="text-black font-bold underline decoration-gray-400">WhoAmEye</span> lets you express yourself with modern design, creative freedom, and a unique public URL.</p>
-        <div className="flex flex-col sm:flex-row gap-6 mb-12 items-center justify-center">
-          <div className="bg-white rounded-2xl p-6 w-72 shadow-xl border border-gray-300 flex flex-col items-center">
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-3 sm:px-4 w-full">
+        <h1 className="text-3xl xs:text-4xl sm:text-6xl font-extrabold mb-4 sm:mb-6 text-black drop-shadow-lg font-serif leading-tight">
+          Your Identity, <span className="bg-gradient-to-r from-black via-gray-700 to-black bg-clip-text text-transparent">Your Vibe.</span>
+        </h1>
+        <p className="max-w-2xl text-base xs:text-lg sm:text-2xl text-gray-700 mb-6 sm:mb-8 font-medium leading-relaxed">
+          Create a stunning, customizable profile card that stands out. Share your story, links, and gallery with the world. <span className="text-black font-bold underline decoration-gray-400">WhoAmEye</span> lets you express yourself with modern design, creative freedom, and a unique public URL.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-8 sm:mb-12 items-center justify-center w-full">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xs shadow-xl border border-gray-300 flex flex-col items-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-200">
             <span className="text-3xl mb-2">🎨</span>
-            <h2 className="font-bold text-xl mb-1 text-black">Fully Customizable</h2>
-            <p className="text-gray-700 text-sm">Choose your theme, font, banner, and layout. Make your card truly yours.</p>
+            <h2 className="font-bold text-lg sm:text-xl mb-1 text-black">Fully Customizable</h2>
+            <p className="text-gray-700 text-sm sm:text-base">Choose your theme, font, banner, and layout. Make your card truly yours.</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 w-72 shadow-xl border border-gray-300 flex flex-col items-center">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xs shadow-xl border border-gray-300 flex flex-col items-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-200">
             <span className="text-3xl mb-2">🔗</span>
-            <h2 className="font-bold text-xl mb-1 text-black">Share Everything</h2>
-            <p className="text-gray-700 text-sm">Add custom links, a bio, pronouns, and a gallery. All in one beautiful card.</p>
+            <h2 className="font-bold text-lg sm:text-xl mb-1 text-black">Share Everything</h2>
+            <p className="text-gray-700 text-sm sm:text-base">Add custom links, a bio, pronouns, and a gallery. All in one beautiful card.</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 w-72 shadow-xl border border-gray-300 flex flex-col items-center">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xs shadow-xl border border-gray-300 flex flex-col items-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-200">
             <span className="text-3xl mb-2">🚀</span>
-            <h2 className="font-bold text-xl mb-1 text-black">Instant & Secure</h2>
-            <p className="text-gray-700 text-sm">Sign up in seconds. Your data is safe, and your username is uniquely yours.</p>
+            <h2 className="font-bold text-lg sm:text-xl mb-1 text-black">Instant & Secure</h2>
+            <p className="text-gray-700 text-sm sm:text-base">Sign up in seconds. Your data is safe, and your username is uniquely yours.</p>
           </div>
         </div>
-        <a href="/profile" className="inline-block px-10 py-4 rounded-full bg-black text-white font-extrabold text-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 mt-4 border border-gray-800">Get Started Free</a>
-        <p className="mt-8 text-gray-500 text-sm">No app download. No ads. Just your vibe, your way.</p>
+        <a href="/profile" className="inline-block px-8 sm:px-10 py-3 sm:py-4 rounded-full bg-gradient-to-r from-black via-gray-800 to-black text-white font-extrabold text-xl sm:text-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 mt-2 border border-gray-800 w-full max-w-xs sm:max-w-md">Get Started Free</a>
+        <p className="mt-6 sm:mt-8 text-gray-500 text-xs sm:text-sm">No app download. No ads. Just your vibe, your way.</p>
       </main>
-      <footer className="w-full flex flex-col items-center justify-center py-6 text-gray-500 text-xs gap-2 border-t border-gray-300 bg-white/80">
+      <footer className="w-full flex flex-col items-center justify-center py-5 sm:py-6 text-gray-500 text-xs gap-2 border-t border-gray-300 bg-white/80">
         <span>© {new Date().getFullYear()} WhoAmEye. All rights reserved.</span>
         <span>Made with <span className="text-black">♥</span> for creative souls.</span>
+        <span>
+          <a href="https://github.com/KayTwenty/WhoAmEye" target="_blank" rel="noopener noreferrer" className="underline hover:text-black transition">View on GitHub</a>
+        </span>
       </footer>
+      <style jsx global>{`
+        @media (max-width: 400px) {
+          h1 { font-size: 2.1rem !important; }
+        }
+        .xs\\:text-4xl { font-size: 2.25rem; }
+        .xs\\:text-lg { font-size: 1.125rem; }
+      `}</style>
     </div>
   );
 }
