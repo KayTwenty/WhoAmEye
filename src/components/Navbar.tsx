@@ -15,6 +15,25 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOpen, handleLogout, shareUrl }) => {
   const [shareOpen, setShareOpen] = React.useState(false);
   const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
+
+  // Delete profile function
+  async function handleDeleteProfile() {
+    if (!window.confirm('Are you sure you want to delete your profile? This cannot be undone.')) return;
+    try {
+      // Call API or Supabase to delete profile
+      const res = await fetch('/api/delete-profile', { method: 'DELETE', credentials: 'include' });
+      if (res.ok) {
+        toast.success('Profile deleted.');
+        setMenuOpen(false);
+        setTimeout(() => { window.location.href = '/'; }, 1200);
+      } else {
+        toast.error('Failed to delete profile.');
+      }
+    } catch (e) {
+      toast.error('Error deleting profile.');
+    }
+  }
+
   return (
     <nav className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 border-b border-gray-300 shadow-lg fixed top-0 left-0 z-30 h-auto sm:h-20 gap-2 sm:gap-0">
       <div className="flex items-center gap-3 select-none justify-center sm:justify-start w-full sm:w-auto">
@@ -143,10 +162,17 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
             </a>
             <button
               onClick={handleLogout}
-              className="w-full text-left px-5 py-2 text-base text-red-600 hover:bg-red-50 font-semibold transition rounded-b-2xl focus:bg-red-100 focus:outline-none"
+              className="w-full text-left px-5 py-2 text-base text-red-600 hover:bg-red-50 font-semibold transition rounded-none border-b border-gray-100 focus:bg-red-100 focus:outline-none"
               role="menuitem"
             >
               Log Out
+            </button>
+            <button
+              onClick={handleDeleteProfile}
+              className="w-full text-left px-5 py-2 text-base text-red-700 hover:bg-red-100 font-semibold transition rounded-b-2xl focus:bg-red-200 focus:outline-none"
+              role="menuitem"
+            >
+              Delete Profile
             </button>
           </div>
         )}
