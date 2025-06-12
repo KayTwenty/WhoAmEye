@@ -1,9 +1,43 @@
 @import "tailwindcss";
 
+/* Box sizing for consistency */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Smooth scroll */
 * {
   scroll-behavior: smooth;
 }
 
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Remove tap highlight on mobile */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Disable user select for buttons */
+button {
+  user-select: none;
+}
+
+/* Custom scrollbar for modern look */
+::-webkit-scrollbar {
+  width: 8px;
+  background: #f3f4f6;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
 }

@@ -14,9 +14,10 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOpen, handleLogout, shareUrl }) => {
   const [shareOpen, setShareOpen] = React.useState(false);
+  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
   return (
-    <nav className="w-full flex items-center justify-between px-6 py-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 border-b border-gray-300 shadow-lg fixed top-0 left-0 z-30 h-20">
-      <div className="flex items-center gap-3 select-none">
+    <nav className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 border-b border-gray-300 shadow-lg fixed top-0 left-0 z-30 h-auto sm:h-20 gap-2 sm:gap-0">
+      <div className="flex items-center gap-3 select-none justify-center sm:justify-start w-full sm:w-auto">
         <Link href="/" className="flex items-center group focus:outline-none" tabIndex={0} aria-label="Go to homepage">
           <span className="relative flex items-center">
             <svg
@@ -45,12 +46,24 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
           </span>
         </Link>
       </div>
-      <div className="relative flex items-center gap-4">
+      <div className="relative flex flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto justify-center sm:justify-end">
         {shareUrl && (
-          <div className="relative">
+          <div className="relative w-full sm:w-auto flex-1">
             <button
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black text-white font-semibold shadow-md hover:bg-gray-900 transition-all duration-200 focus:outline-none border border-gray-700 text-sm"
-              onClick={() => setShareOpen((v) => !v)}
+              className="flex items-center gap-2 w-full sm:w-auto px-3 py-1.5 rounded-lg bg-black text-white font-semibold shadow-md hover:bg-gray-900 transition-all duration-200 focus:outline-none border border-gray-700 text-sm justify-center"
+              onClick={async () => {
+                if (typeof window !== 'undefined' && window.navigator.share && window.matchMedia('(max-width: 640px)').matches) {
+                  try {
+                    await window.navigator.share({
+                      title: 'Check out my WhoAmEye card!',
+                      text: 'See my profile on WhoAmEye:',
+                      url: shareUrl,
+                    });
+                  } catch (e) { /* user cancelled or error */ }
+                  return;
+                }
+                setShareOpen((v) => !v);
+              }}
               aria-haspopup="true"
               aria-expanded={shareOpen}
             >
@@ -94,7 +107,7 @@ const Navbar: React.FC<NavbarProps> = ({ displayName, email, menuOpen, setMenuOp
           </div>
         )}
         <button
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white text-black font-semibold shadow-md hover:bg-gray-200 transition-all duration-200 focus:outline-none group border border-gray-300 text-sm"
+          className="flex items-center gap-2 w-full sm:w-auto px-3 py-1.5 rounded-lg bg-white text-black font-semibold shadow-md hover:bg-gray-200 transition-all duration-200 focus:outline-none group border border-gray-300 text-sm justify-center"
           aria-haspopup="true"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(!menuOpen)}
