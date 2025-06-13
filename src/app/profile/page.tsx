@@ -83,7 +83,7 @@ export default function ProfilePage() {
     banner: string;
     bannerImage: string;
     links: { label: string; url: string; icon: string }[];
-    gallery: string[];
+    gallery: ({ thumb: string; full: string } | string)[];
     socials?: { [key: string]: string };
   }>({
     username: "",
@@ -97,7 +97,7 @@ export default function ProfilePage() {
     links: [
       { label: "My Portfolio", url: "", icon: "FaLink" }
     ],
-    gallery: [],
+    gallery: ([] as ({ thumb: string; full: string } | string)[]),
     socials: {
       twitter: '',
       instagram: '',
@@ -218,7 +218,15 @@ export default function ProfilePage() {
           banner: data.banner || 'gradient',
           bannerImage: data.banner_image || '',
           links: data.links || [],
-          gallery: data.gallery || [],
+          gallery: Array.isArray(data.gallery)
+            ? data.gallery.map((item: any) =>
+                typeof item === 'object' && item.thumb && item.full
+                  ? item
+                  : typeof item === 'string'
+                  ? item
+                  : null
+              ).filter(Boolean)
+            : [],
           socials: data.socials || {
             twitter: '',
             instagram: '',
@@ -249,28 +257,57 @@ export default function ProfilePage() {
           toast.error('Image too large (max 5MB).');
           continue;
         }
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user?.id}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-        const { error } = await supabase.storage.from('gallery').upload(fileName, file, { upsert: false });
-        if (error) {
+        // Compress original image (max 1920px wide, JPEG/WebP, quality 0.8)
+        const compressed = await compressImage(file, 1920, 0.8);
+        // Create thumbnail (max 320px wide, JPEG/WebP, quality 0.6)
+        const thumbnail = await compressImage(file, 320, 0.6);
+        const fileExt = 'webp';
+        const baseName = `${user?.id}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+        const fileName = `${baseName}.${fileExt}`;
+        const thumbName = `${baseName}_thumb.${fileExt}`;
+        // Upload both images
+        const { error: origErr } = await supabase.storage.from('gallery').upload(fileName, compressed, { upsert: false, contentType: 'image/webp' });
+        const { error: thumbErr } = await supabase.storage.from('gallery').upload(thumbName, thumbnail, { upsert: false, contentType: 'image/webp' });
+        if (origErr || thumbErr) {
           toast.error('Failed to upload image.');
           continue;
         }
+        // Get public URLs
         const { data: urlData } = supabase.storage.from('gallery').getPublicUrl(fileName);
-        if (urlData?.publicUrl) {
-          setProfile(prev => ({ ...prev, gallery: [...prev.gallery, urlData.publicUrl] }));
+        const { data: thumbUrlData } = supabase.storage.from('gallery').getPublicUrl(thumbName);
+        if (urlData?.publicUrl && thumbUrlData?.publicUrl) {
+          setProfile(prev => ({ ...prev, gallery: [...prev.gallery, { thumb: thumbUrlData.publicUrl, full: urlData.publicUrl }] }));
         }
       }
     }
   }
-  async function removeGalleryImage(idx: number) {
-    const url = profile.gallery[idx];
-    // Extract file name from URL
-    const fileName = url.split('/').pop()?.split('?')[0];
-    if (fileName) {
-      await supabase.storage.from('gallery').remove([fileName]);
-    }
-    setProfile(prev => ({ ...prev, gallery: prev.gallery.filter((_, i) => i !== idx) }));
+
+  // Helper: compress image using canvas
+  async function compressImage(file: File, maxWidth: number, quality: number): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.width);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject('No canvas context');
+        ctx.drawImage(img, 0, 0, w, h);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(blob);
+            else reject('Compression failed');
+          },
+          'image/webp',
+          quality
+        );
+      };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
   }
 
   // Social media platforms and icons
@@ -322,6 +359,14 @@ export default function ProfilePage() {
       toast.error('Error saving profile: ' + error.message);
       console.error('Supabase profile save error:', error);
     }
+  }
+
+  // Remove gallery image by index
+  function removeGalleryImage(index: number) {
+    setProfile(prev => ({
+      ...prev,
+      gallery: prev.gallery.filter((_, i) => i !== index)
+    }));
   }
 
   // Nav bar and main content
@@ -542,21 +587,24 @@ export default function ProfilePage() {
                 <div className="w-full mb-4">
                   <label className="text-xs text-gray-500 mb-1 block">Gallery (up to 9 images)</label>
                   <div className="flex flex-wrap gap-2 mb-2">
-                    {profile.gallery && profile.gallery.map((img, i) => (
-                      <div key={i} className="relative group">
-                        <img src={img} alt={`Gallery ${i + 1}`} className="w-20 h-20 object-cover rounded-lg border shadow" />
-                        {editing && (
-                          <button
-                            type="button"
-                            onClick={() => removeGalleryImage(i)}
-                            className="absolute top-1 right-1 bg-white/80 text-red-600 rounded-full p-1 text-xs shadow group-hover:scale-110 transition"
-                            title="Remove"
-                          >
-                            ✕
-                          </button>
-                        )}
-                      </div>
-                    ))}
+                    {profile.gallery && profile.gallery.map((img, i) => {
+                      const thumb = typeof img === 'string' ? img : img.thumb;
+                      return (
+                        <div key={i} className="relative group">
+                          <img src={thumb} alt={`Gallery ${i + 1}`} className="w-20 h-20 object-cover rounded-lg border shadow" />
+                          {editing && (
+                            <button
+                              type="button"
+                              onClick={() => removeGalleryImage(i)}
+                              className="absolute top-1 right-1 bg-white/80 text-red-600 rounded-full p-1 text-xs shadow group-hover:scale-110 transition"
+                              title="Remove"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
                     {editing && profile.gallery.length < 9 && (
                       <button
                         type="button"

@@ -2,15 +2,23 @@
 
 import React, { useState, useRef, useEffect } from "react";
 
-export default function GalleryModal({ gallery }: { gallery: string[] }) {
+// Accepts gallery as ({ thumb: string, full: string } | string)[]
+export type GalleryItem = { thumb: string; full: string } | string;
+
+export default function GalleryModal({ gallery }: { gallery: GalleryItem[] }) {
   // Always call hooks at the top level
   const [enlargedImg, setEnlargedImg] = useState<string | null>(null);
   const [swipeX, setSwipeX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   const touchStart = useRef<number | null>(null);
 
+  // Helper to get the full image URL for enlarged view
+  const getFullUrl = (item: GalleryItem) => typeof item === 'string' ? item : item.full;
+  // Helper to get the thumbnail URL for grid
+  const getThumbUrl = (item: GalleryItem) => typeof item === 'string' ? item : item.thumb;
+
   // Helper to get current index
-  const currentIndex = enlargedImg ? gallery.findIndex(img => img === enlargedImg) : -1;
+  const currentIndex = enlargedImg ? gallery.findIndex(img => getFullUrl(img) === enlargedImg) : -1;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < gallery.length - 1;
 
@@ -33,8 +41,8 @@ export default function GalleryModal({ gallery }: { gallery: string[] }) {
     const delta = clientX - touchStart.current;
     setIsSwiping(false);
     setSwipeX(0);
-    if (delta > 50 && hasPrev) setEnlargedImg(gallery[currentIndex - 1]); // swipe right
-    else if (delta < -50 && hasNext) setEnlargedImg(gallery[currentIndex + 1]); // swipe left
+    if (delta > 50 && hasPrev) setEnlargedImg(getFullUrl(gallery[currentIndex - 1])); // swipe right
+    else if (delta < -50 && hasNext) setEnlargedImg(getFullUrl(gallery[currentIndex + 1])); // swipe left
     touchStart.current = null;
   }
 
@@ -42,8 +50,8 @@ export default function GalleryModal({ gallery }: { gallery: string[] }) {
   useEffect(() => {
     if (!enlargedImg) return;
     function handleKey(e: KeyboardEvent) {
-      if (e.key === 'ArrowLeft' && hasPrev) setEnlargedImg(gallery[currentIndex - 1]);
-      if (e.key === 'ArrowRight' && hasNext) setEnlargedImg(gallery[currentIndex + 1]);
+      if (e.key === 'ArrowLeft' && hasPrev) setEnlargedImg(getFullUrl(gallery[currentIndex - 1]));
+      if (e.key === 'ArrowRight' && hasNext) setEnlargedImg(getFullUrl(gallery[currentIndex + 1]));
       if (e.key === 'Escape') setEnlargedImg(null);
     }
     window.addEventListener('keydown', handleKey);
@@ -99,10 +107,10 @@ export default function GalleryModal({ gallery }: { gallery: string[] }) {
         {gallery.map((img, i) => (
           <div key={i} className="relative group">
             <img
-              src={img}
+              src={getThumbUrl(img)}
               alt={`Gallery ${i + 1}`}
               className="w-28 h-28 object-cover rounded-lg border shadow cursor-zoom-in transition hover:scale-105"
-              onClick={() => setEnlargedImg(img)}
+              onClick={() => setEnlargedImg(getFullUrl(img))}
             />
           </div>
         ))}
