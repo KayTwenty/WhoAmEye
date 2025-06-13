@@ -219,13 +219,13 @@ export default function ProfilePage() {
           bannerImage: data.banner_image || '',
           links: data.links || [],
           gallery: Array.isArray(data.gallery)
-            ? data.gallery.map((item: any) =>
-                typeof item === 'object' && item.thumb && item.full
-                  ? item
+            ? (data.gallery as Array<{ thumb?: string; full?: string } | string>).map((item) =>
+                typeof item === 'object' && item !== null && 'thumb' in item && 'full' in item
+                  ? item as { thumb: string; full: string }
                   : typeof item === 'string'
                   ? item
                   : null
-              ).filter(Boolean)
+              ).filter((item): item is { thumb: string; full: string } | string => item !== null)
             : [],
           socials: data.socials || {
             twitter: '',
