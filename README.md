@@ -37,7 +37,7 @@ WhoAmEye is a modern, customizable profile card and bio link platform for social
 ---
 
 ## 🌐 Deployment
-Deploy on [Vercel](https://vercel.com/) or your preferred platform. See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying).
+Deploy on [Vercel](https://vercel.com/) or your preferred platform.
 
 ---
 
